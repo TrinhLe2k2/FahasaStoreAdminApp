@@ -1,0 +1,64 @@
+﻿@{
+    var width = "";
+    var height = "";
+    var isRounded = "rounded-3";
+    if (isMenu == true)
+    {
+        width = "120";
+        height = "120";
+    }
+    if (isUser == true)
+    {
+        width = "120";
+        height = "120";
+        isRounded = "rounded-circle";
+    }
+    if (isBook == true)
+    {
+        width = "300";
+        height = "500";
+    }
+}
+
+<div>
+    <input type="file" name="fileImage" hidden class="form-control" id="file_@idInputFile" />
+    <label for="file_@idInputFile" role="button" class="@isRounded ">
+        <div id="imagePreview_@idInputFile" class="position-relative overflow-hidden @isRounded imagePreview ">
+            <img src="" width=@width height=@height class="object-fit-contain @isRounded" />
+            <div class="overlay @isRounded"><i class="bi bi-camera"></i></div>
+        </div>
+    </label>
+</div>
+
+<script src="/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var src = $('#@idInputFile').attr('value');
+        $('#imagePreview_@idInputFile img').attr('src', src);
+
+        $('#file_@idInputFile').change(function (event) {
+            var input = event.target;
+            var reader = new FileReader();
+            reader.onload = function () {
+                var dataURL = reader.result;
+                $('#imagePreview_@idInputFile img').attr('src', dataURL);
+                $('#@idInputFile').attr('value', dataURL);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        });
+    });
+</script>
+
+@code {
+    [Parameter]
+    public string? idInputFile { get; set; }
+    [Parameter]
+    public bool? isMenu { get; set; }
+    [Parameter]
+    public bool? isBook { get; set; }
+    [Parameter]
+    public bool? isBanner { get; set; }
+    [Parameter]
+    public bool? isUser { get; set; }
+}
