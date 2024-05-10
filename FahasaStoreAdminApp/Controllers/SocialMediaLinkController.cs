@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FahasaStoreAdminApp.DataTemp;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FahasaStoreAdminApp.Controllers
@@ -8,7 +9,7 @@ namespace FahasaStoreAdminApp.Controllers
         // GET: SocialMediaLinkController
         public ActionResult Index()
         {
-            return View();
+            return View(new SocialMediaLinkData().ListSocialMediaLinks());
         }
 
         // GET: SocialMediaLinkController/Details/5
@@ -20,7 +21,7 @@ namespace FahasaStoreAdminApp.Controllers
         // GET: SocialMediaLinkController/Create
         public ActionResult Create()
         {
-            return View();
+            return PartialView();
         }
 
         // POST: SocialMediaLinkController/Create
@@ -41,7 +42,7 @@ namespace FahasaStoreAdminApp.Controllers
         // GET: SocialMediaLinkController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return PartialView(new SocialMediaLinkData().SocialMediaLink(id));
         }
 
         // POST: SocialMediaLinkController/Edit/5
@@ -62,7 +63,7 @@ namespace FahasaStoreAdminApp.Controllers
         // GET: SocialMediaLinkController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return PartialView(new SocialMediaLinkData().SocialMediaLink(id));
         }
 
         // POST: SocialMediaLinkController/Delete/5
