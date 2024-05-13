@@ -1,11 +1,25 @@
-﻿@model IEnumerable<FahasaStoreAPI.Models.FormModels.BookForm>
+﻿@* @model IEnumerable<FahasaStoreAPI.Models.FormModels.BookForm> *@
+@model IEnumerable<FahasaStoreAdminApp.Models.EntitiesModels.BookEntities>
 
 @{
     ViewData["Title"] = "Quản lý sách";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["ActiveSidebar"] = 4;
     ViewData["UrlCurrent"] = "/Book/Index";
+    var ActiveID = TempData["ActiveID"] as int?;
 }
+@if (ActiveID != null)
+{
+    <a href="/Book/Details" id="DetailsID_@ActiveID" IdValue="@ActiveID" onclick="HandlerCRUD(this, event)"></a>
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                $('#DetailsID_@ActiveID').click();
+            });
+        </script>
+    }
+}
+
 <a href="/Book/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
     Create New
 </a>
@@ -111,3 +125,4 @@
         }
     </tbody>
 </table>
+

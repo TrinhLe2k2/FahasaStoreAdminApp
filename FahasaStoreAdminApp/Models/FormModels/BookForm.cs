@@ -2,6 +2,10 @@
 {
     public class BookForm
     {
+        public BookForm()
+        {
+
+        }
         public BookForm(int bookId, int? subcategoryId, int? partnerId, int? authorId, int? coverTypeId, int? dimensionId, string name, string description, decimal originalPrice, decimal currentPrice, double discountPercentage, int quantity, double? weight, int? pageCount)
         {
             BookId = bookId;

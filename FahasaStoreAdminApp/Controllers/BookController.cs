@@ -1,22 +1,44 @@
-﻿using FahasaStoreAdminApp.DataTemp;
+﻿using AutoMapper;
+using FahasaStoreAdminApp.DataTemp;
+using FahasaStoreAdminApp.Interfaces;
+using FahasaStoreAdminApp.Models;
+using FahasaStoreAPI.Models.FormModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Diagnostics;
 
 namespace FahasaStoreAdminApp.Controllers
 {
     public class BookController : Controller
     {
-        // GET: BookController
-        public ActionResult Index()
+        private readonly IBookService _bookService;
+        private readonly IMapper _mapper;
+        public BookController(IBookService bookService, IMapper mapper)
         {
-            return View(new BookData().ListBooks());
+            _bookService = bookService;
+            _mapper = mapper;
+        }
+
+        // GET: BookController
+        public async Task<ActionResult> Index()
+        {
+            try
+            {
+                var books = await _bookService.GetBooksAsync();
+                return View(books);
+            }
+            catch
+            {
+                return RedirectToAction("Error");
+            }
         }
 
         // GET: BookController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return PartialView(new BookData().Book(id));
+            var book = await _bookService.GetBookByIdAsync(id);
+            return PartialView(book);
         }
 
         // GET: BookController/Create
@@ -37,10 +59,12 @@ namespace FahasaStoreAdminApp.Controllers
         // POST: BookController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(BookForm bookForm)
         {
             try
             {
+                var res = await _bookService.AddBookAsync(bookForm);
+                TempData["ActiveID"] = res;
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -50,7 +74,7 @@ namespace FahasaStoreAdminApp.Controllers
         }
 
         // GET: BookController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
             ViewData["SubcategoryId"] = new SelectList(new SubcategoryData().ListSubcategorys(), "SubcategoryId", "Name");
             ViewData["PartnerId"] = new SelectList(new PartnerData().ListPartners(), "PartnerId", "Name");
@@ -60,16 +84,21 @@ namespace FahasaStoreAdminApp.Controllers
                 DimensionId = d.DimensionId,
                 DisplayText = $"{d.Length} x {d.Width} x {d.Height}"
             }), "DimensionId", "DisplayText");
-            return PartialView(new BookData().Book(id));
+
+            var book = await _bookService.GetBookByIdAsync(id);
+            return PartialView(_mapper.Map<BookForm>(book));
         }
 
         // POST: BookController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, BookForm bookForm)
         {
             try
             {
+                bookForm.BookId = id;
+                var res = await _bookService.UpdateBookAsync(id, bookForm);
+                TempData["ActiveID"] = res;
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -79,24 +108,32 @@ namespace FahasaStoreAdminApp.Controllers
         }
 
         // GET: BookController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return PartialView(new BookData().Book(id));
+            var book = await _bookService.GetBookByIdAsync(id);
+            return PartialView(_mapper.Map<BookForm>(book));
         }
 
         // POST: BookController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
             try
             {
+                var bookDelete = await _bookService.DeleteBookAsync(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
             }
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

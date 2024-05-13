@@ -1,7 +1,15 @@
+using AutoMapper;
+using FahasaStoreAdminApp.Interfaces;
+using FahasaStoreAdminApp.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<IBookService, BookService>();
+
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();
 
