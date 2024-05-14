@@ -1,22 +1,44 @@
-﻿using FahasaStoreAdminApp.DataTemp;
+﻿using AutoMapper;
+using FahasaStoreAdminApp.DataTemp;
+using FahasaStoreAdminApp.Interfaces;
+using FahasaStoreAdminApp.Models;
+using FahasaStoreAPI.Models.FormModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Diagnostics;
 
 namespace FahasaStoreAdminApp.Controllers
 {
     public class PartnerTypeController : Controller
     {
-        // GET: PartnerTypeController
-        public ActionResult Index()
+        private readonly IPartnerTypeService _PartnerTypeService;
+        private readonly IMapper _mapper;
+        public PartnerTypeController(IPartnerTypeService PartnerTypeService, IMapper mapper)
         {
-            return View(new PartnerTypeData().ListPartnerTypes());
+            _PartnerTypeService = PartnerTypeService;
+            _mapper = mapper;
+        }
+
+        // GET: PartnerTypeController
+        public async Task<ActionResult> Index()
+        {
+            try
+            {
+                var PartnerTypes = await _PartnerTypeService.GetPartnerTypesAsync();
+                return View(PartnerTypes);
+            }
+            catch
+            {
+                return RedirectToAction("Error");
+            }
         }
 
         // GET: PartnerTypeController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            var PartnerType = await _PartnerTypeService.GetPartnerTypeByIdAsync(id);
+            return PartialView(PartnerType);
         }
 
         // GET: PartnerTypeController/Create
@@ -28,31 +50,36 @@ namespace FahasaStoreAdminApp.Controllers
         // POST: PartnerTypeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(PartnerTypeForm PartnerTypeForm)
         {
             try
             {
+                var res = await _PartnerTypeService.AddPartnerTypeAsync(PartnerTypeForm);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("Error");
             }
         }
 
         // GET: PartnerTypeController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return PartialView(new PartnerTypeData().PartnerType(id));
+            var PartnerType = await _PartnerTypeService.GetPartnerTypeByIdAsync(id);
+            return PartialView(_mapper.Map<PartnerTypeForm>(PartnerType));
         }
 
         // POST: PartnerTypeController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, PartnerTypeForm PartnerTypeForm)
         {
             try
             {
+                PartnerTypeForm.PartnerTypeId = id;
+                var res = await _PartnerTypeService.UpdatePartnerTypeAsync(id, PartnerTypeForm);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -62,24 +89,34 @@ namespace FahasaStoreAdminApp.Controllers
         }
 
         // GET: PartnerTypeController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return PartialView(new PartnerTypeData().PartnerType(id));
+            var PartnerType = await _PartnerTypeService.GetPartnerTypeByIdAsync(id);
+            return PartialView(_mapper.Map<PartnerTypeForm>(PartnerType));
         }
 
         // POST: PartnerTypeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
             try
             {
+                var PartnerTypeDelete = await _PartnerTypeService.DeletePartnerTypeAsync(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
             }
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            var errorMessage = TempData["ErrorMessage"] as string;
+            ViewBag.ErrorMessage = errorMessage;
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

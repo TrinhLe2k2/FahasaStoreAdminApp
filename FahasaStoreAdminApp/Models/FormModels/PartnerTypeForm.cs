@@ -2,6 +2,7 @@
 {
     public class PartnerTypeForm
     {
+        public PartnerTypeForm() { }
         public PartnerTypeForm(int partnerTypeId, string name)
         {
             PartnerTypeId = partnerTypeId;

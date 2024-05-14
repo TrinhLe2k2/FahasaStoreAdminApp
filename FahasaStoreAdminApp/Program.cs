@@ -11,6 +11,7 @@ builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
+builder.Services.AddScoped<IPartnerTypeService, PartnerTypeService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
