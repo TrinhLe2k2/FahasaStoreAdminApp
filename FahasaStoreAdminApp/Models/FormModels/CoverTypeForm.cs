@@ -2,6 +2,7 @@
 {
     public class CoverTypeForm
     {
+        public CoverTypeForm() { }
         public CoverTypeForm(int coverTypeId, string typeName)
         {
             CoverTypeId = coverTypeId;
