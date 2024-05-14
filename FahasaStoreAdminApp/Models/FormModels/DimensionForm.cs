@@ -2,6 +2,7 @@
 {
     public class DimensionForm
     {
+        public DimensionForm() { }
         public DimensionForm(int dimensionId, double length, double width, double height, string unit)
         {
             DimensionId = dimensionId;
