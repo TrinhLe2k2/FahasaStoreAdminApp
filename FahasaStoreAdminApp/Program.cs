@@ -10,6 +10,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 

@@ -2,6 +2,7 @@
 {
     public class SubcategoryForm
     {
+        public SubcategoryForm() { }
         public SubcategoryForm(int subcategoryId, int? categoryId, string name, string imageUrl)
         {
             SubcategoryId = subcategoryId;

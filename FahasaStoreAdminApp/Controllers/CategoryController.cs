@@ -58,7 +58,6 @@ namespace FahasaStoreAdminApp.Controllers
             try
             {
                 var res = await _CategoryService.AddCategoryAsync(CategoryForm);
-                TempData["ActiveID"] = res;
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -84,7 +83,6 @@ namespace FahasaStoreAdminApp.Controllers
             {
                 CategoryForm.CategoryId = id;
                 var res = await _CategoryService.UpdateCategoryAsync(id, CategoryForm);
-                TempData["ActiveID"] = res;
                 return RedirectToAction(nameof(Index));
             }
             catch

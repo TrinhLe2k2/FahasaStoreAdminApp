@@ -1,14 +1,58 @@
-﻿@model IEnumerable<FahasaStoreAPI.Models.FormModels.SubcategoryForm>
+﻿@using FahasaStoreAPI.Models.EntitiesModels
+@model IEnumerable<FahasaStoreAPI.Models.EntitiesModels.SubcategoryEntities>
 
 @{
     ViewData["Title"] = "Quản lý Thể loại con";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["ActiveSidebar"] = 4;
     ViewData["UrlCurrent"] = "/Subcategory/Index";
+    var categories = ViewData["Categories"] as List<CategoryEntities>;
 }
-<a href="/Subcategory/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
-    Create New
-</a>
+<div class="d-flex justify-content-between">
+    <a href="/Subcategory/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
+        Create New
+    </a>
+    <div>
+        @{
+            if (categories != null)
+            {
+                <select id="select-category" class="form-select">
+                    <option selected>--Tất cả thể loại--</option>
+                    @foreach (var item in categories)
+                    {
+                        <option value="@item.CategoryId">@item.Name</option>
+                    }
+                </select>
+                @section Scripts {
+                <script>
+                    $(document).ready(function () {
+                        $('#select-category').change(function () {
+                            var categoryId = $(this).val();
+                            // Chỉ thực hiện AJAX nếu một tùy chọn khác "Tất cả thể loại" được chọn
+                            if (categoryId) {
+                                $.ajax({
+                                    url: '/Subcategory/GetSubcategoriesByCategoryID/' + categoryId,
+                                    type: 'GET',
+                                    success: function (data) {
+                                        $('tbody').html(data);
+                                    },
+                                    error: function (xhr, status, error) {
+                                        alert('AJAX Error: ' + status + error)
+                                        console.error('AJAX Error: ' + status + error);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                </script>
+                }
+            }
+        }
+    </div>
+</div>
+
+
+
 <table class="table">
     <thead>
         <tr>
@@ -16,7 +60,7 @@
                 @Html.DisplayNameFor(model => model.SubcategoryId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CategoryId)
+                @Html.DisplayNameFor(model => model.Category)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -35,7 +79,7 @@
                     @Html.DisplayFor(modelItem => item.SubcategoryId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CategoryId)
+                    @item.Category?.Name
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
