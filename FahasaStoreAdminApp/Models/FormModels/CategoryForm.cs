@@ -2,6 +2,7 @@
 {
     public class CategoryForm
     {
+        public CategoryForm() { }
         public CategoryForm(int categoryId, string name, string imageUrl)
         {
             CategoryId = categoryId;

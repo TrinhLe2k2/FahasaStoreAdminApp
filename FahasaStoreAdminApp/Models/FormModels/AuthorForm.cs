@@ -2,6 +2,7 @@
 {
     public class AuthorForm
     {
+        public AuthorForm() { }
         public AuthorForm(int authorId, string name)
         {
             AuthorId = authorId;

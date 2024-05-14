@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FahasaStoreAPI.Models.FormModels.CategoryForm>
+﻿@model IEnumerable<FahasaStoreAPI.Models.EntitiesModels.CategoryEntities>
 
 @{
     ViewData["Title"] = "Quản lý Thể loại";
@@ -9,6 +9,7 @@
 <a href="/Category/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
     Create New
 </a>
+
 <table class="table">
     <thead>
         <tr>
@@ -35,7 +36,7 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    <img src="@item.ImageUrl" alt="Image" width="50" height="50" class="object-fit-contain" />
+                    <img src="@item.ImageUrl" alt="Image" width="50" height="50" class="object-fit-contain rounded-3" />
                 </td>
                 <td>
                     <a href="/Category/Edit" IdValue="@item.CategoryId" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |

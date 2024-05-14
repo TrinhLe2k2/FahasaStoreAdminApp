@@ -1,10 +1,21 @@
-﻿@model IEnumerable<FahasaStoreAPI.Models.FormModels.AuthorForm>
+﻿@model IEnumerable<FahasaStoreAPI.Models.EntitiesModels.AuthorEntities>
 
 @{
     ViewData["Title"] = "Quản lý tác giả";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["ActiveSidebar"] = 4;
     ViewData["UrlCurrent"] = "/Author/Index";
+}
+@if (TempData["ActiveID"] != null)
+{
+    <a href="/Author/Details" id="DetailsID_@TempData["ActiveID"]" IdValue="@TempData["ActiveID"]" onclick="HandlerCRUD(this, event)"></a>
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                $('#DetailsID_@TempData["ActiveID"]').click();
+            });
+        </script>
+    }
 }
 <a href="/Author/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
     Create New

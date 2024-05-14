@@ -1,31 +1,11 @@
-﻿@{
-    var width = "";
-    var height = "";
-    var isRounded = "rounded-3";
-    if (isMenu == true)
-    {
-        width = "120";
-        height = "120";
-    }
-    if (isUser == true)
-    {
-        width = "120";
-        height = "120";
-        isRounded = "rounded-circle";
-    }
-    if (isBook == true)
-    {
-        width = "300";
-        height = "500";
-    }
-}
+﻿
 
 <div>
     <input type="file" name="fileImage" hidden class="form-control" id="file_@idInputFile" />
-    <label for="file_@idInputFile" role="button" class="@isRounded ">
-        <div id="imagePreview_@idInputFile" class="position-relative overflow-hidden @isRounded imagePreview ">
-            <img src="" width=@width height=@height class="object-fit-contain @isRounded" />
-            <div class="overlay @isRounded"><i class="bi bi-camera"></i></div>
+    <label for="file_@idInputFile" role="button" class="rounded-3 ">
+        <div id="imagePreview_@idInputFile" class="position-relative overflow-hidden rounded-3 imagePreview ">
+            <img src="" width="120" height="120" class="object-fit-contain rounded-3" />
+            <div class="overlay rounded-3"><i class="bi bi-camera"></i></div>
         </div>
     </label>
 </div>
@@ -53,12 +33,4 @@
 @code {
     [Parameter]
     public string? idInputFile { get; set; }
-    [Parameter]
-    public bool? isMenu { get; set; }
-    [Parameter]
-    public bool? isBook { get; set; }
-    [Parameter]
-    public bool? isBanner { get; set; }
-    [Parameter]
-    public bool? isUser { get; set; }
 }

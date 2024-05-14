@@ -46,7 +46,7 @@ namespace FahasaStoreAdminApp.Controllers
         {
             ViewData["SubcategoryId"] = new SelectList(new SubcategoryData().ListSubcategorys(), "SubcategoryId", "Name");
             ViewData["PartnerId"] = new SelectList(new PartnerData().ListPartners(), "PartnerId", "Name");
-            ViewData["AuthorId"] = new SelectList(new AuthorData().ListAuthors(), "AuthorId", "Name");
+            //ViewData["AuthorId"] = new SelectList(new AuthorData().ListAuthors(), "AuthorId", "Name");
             ViewData["CoverTypeId"] = new SelectList(new CoverTypeData().ListCoverTypes(), "CoverTypeId", "TypeName");
             ViewData["DimensionId"] = new SelectList(new DimensionData().ListDimensions().Select(d => new {
                 DimensionId = d.DimensionId,
@@ -78,7 +78,7 @@ namespace FahasaStoreAdminApp.Controllers
         {
             ViewData["SubcategoryId"] = new SelectList(new SubcategoryData().ListSubcategorys(), "SubcategoryId", "Name");
             ViewData["PartnerId"] = new SelectList(new PartnerData().ListPartners(), "PartnerId", "Name");
-            ViewData["AuthorId"] = new SelectList(new AuthorData().ListAuthors(), "AuthorId", "Name");
+            //ViewData["AuthorId"] = new SelectList(new AuthorData().ListAuthors(), "AuthorId", "Name");
             ViewData["CoverTypeId"] = new SelectList(new CoverTypeData().ListCoverTypes(), "CoverTypeId", "TypeName");
             ViewData["DimensionId"] = new SelectList(new DimensionData().ListDimensions().Select(d => new {
                 DimensionId = d.DimensionId,

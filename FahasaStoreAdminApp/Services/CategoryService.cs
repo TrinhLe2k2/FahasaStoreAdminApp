@@ -2,35 +2,36 @@
 using FahasaStoreAPI.Models.EntitiesModels;
 using FahasaStoreAPI.Models.FormModels;
 using Newtonsoft.Json;
+using System.Net.Http;
 using System.Text;
 
 namespace FahasaStoreAdminApp.Services
 {
-    public class BookService : IBookService
+    public class CategoryService : ICategoryService
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        public BookService(IHttpClientFactory httpClientFactory)
+        public CategoryService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<ICollection<BookEntities>> GetBooksAsync()
+        public async Task<ICollection<CategoryEntities>> GetCategorysAsync()
         {
             try
             {
                 using (var httpClient = _httpClientFactory.CreateClient())
                 {
-                    var response = await httpClient.GetAsync("https://localhost:7069/api/Books");
+                    var response = await httpClient.GetAsync("https://localhost:7069/api/Categories");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<ICollection<BookEntities>>(content);
-                    return data ?? new List<BookEntities>();
+                    var data = JsonConvert.DeserializeObject<ICollection<CategoryEntities>>(content);
+                    return data ?? new List<CategoryEntities>();
                 }
             }
             catch (HttpRequestException ex)
             {
                 // Xử lý exception, có thể ghi log hoặc thực hiện các hành động phù hợp khác
-                throw new Exception("Error occurred while fetching books from API.", ex);
+                throw new Exception("Error occurred while fetching Categorys from API.", ex);
             }
             catch (JsonException ex)
             {
@@ -39,22 +40,22 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<BookEntities> GetBookByIdAsync(int id)
+        public async Task<CategoryEntities> GetCategoryByIdAsync(int id)
         {
             try
             {
                 using (var httpClient = _httpClientFactory.CreateClient())
                 {
-                    var response = await httpClient.GetAsync($"https://localhost:7069/api/Books/{id}");
+                    var response = await httpClient.GetAsync($"https://localhost:7069/api/Categories/{id}");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var book = JsonConvert.DeserializeObject<BookEntities>(content);
-                    return book ?? new BookEntities();
+                    var Category = JsonConvert.DeserializeObject<CategoryEntities>(content);
+                    return Category ?? new CategoryEntities();
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error occurred while fetching book with ID {id} from API.", ex);
+                throw new Exception($"Error occurred while fetching Category with ID {id} from API.", ex);
             }
             catch (JsonException ex)
             {
@@ -62,35 +63,35 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> AddBookAsync(BookForm book)
+        public async Task<int> AddCategoryAsync(CategoryForm Category)
         {
             try
             {
                 using (var httpClient = _httpClientFactory.CreateClient())
                 {
-                    var content = new StringContent(JsonConvert.SerializeObject(book), Encoding.UTF8, "application/json");
-                    var response = await httpClient.PostAsync("https://localhost:7069/api/Books", content);
+                    var content = new StringContent(JsonConvert.SerializeObject(Category), Encoding.UTF8, "application/json");
+                    var response = await httpClient.PostAsync("https://localhost:7069/api/Categories", content);
                     response.EnsureSuccessStatusCode();
                     var createdContent = await response.Content.ReadAsStringAsync();
 
                     if (string.IsNullOrWhiteSpace(createdContent))
                     {
-                        throw new Exception("Error: Empty response received from API while adding book.");
+                        throw new Exception("Error: Empty response received from API while adding Category.");
                     }
 
-                    var createdBook = JsonConvert.DeserializeObject<BookEntities>(createdContent);
+                    var createdCategory = JsonConvert.DeserializeObject<CategoryEntities>(createdContent);
 
-                    if (createdBook == null)
+                    if (createdCategory == null)
                     {
-                        throw new Exception("Error: Failed to deserialize response from API while adding book.");
+                        throw new Exception("Error: Failed to deserialize response from API while adding Category.");
                     }
 
-                    return createdBook.BookId;
+                    return createdCategory.CategoryId;
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception("Error occurred while adding book to API.", ex);
+                throw new Exception("Error occurred while adding Category to API.", ex);
             }
             catch (JsonException ex)
             {
@@ -98,21 +99,21 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> UpdateBookAsync(int id, BookForm book)
+        public async Task<int> UpdateCategoryAsync(int id, CategoryForm Category)
         {
             try
             {
                 using (var httpClient = _httpClientFactory.CreateClient())
                 {
-                    var content = new StringContent(JsonConvert.SerializeObject(book), Encoding.UTF8, "application/json");
-                    var response = await httpClient.PutAsync($"https://localhost:7069/api/Books/{id}", content);
+                    var content = new StringContent(JsonConvert.SerializeObject(Category), Encoding.UTF8, "application/json");
+                    var response = await httpClient.PutAsync($"https://localhost:7069/api/Categories/{id}", content);
                     response.EnsureSuccessStatusCode();
                     return id;
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error occurred while updating book with ID {id} in API.", ex);
+                throw new Exception($"Error occurred while updating Category with ID {id} in API.", ex);
             }
             catch (JsonException ex)
             {
@@ -120,20 +121,20 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<bool> DeleteBookAsync(int id)
+        public async Task<bool> DeleteCategoryAsync(int id)
         {
             try
             {
                 using (var httpClient = _httpClientFactory.CreateClient())
                 {
-                    var response = await httpClient.DeleteAsync($"https://localhost:7069/api/Books/{id}");
+                    var response = await httpClient.DeleteAsync($"https://localhost:7069/api/Categories/{id}");
                     response.EnsureSuccessStatusCode();
                     return true;
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error occurred while deleting book with ID {id} from API.", ex);
+                throw new Exception($"Error occurred while deleting Category with ID {id} from API.", ex);
             }
         }
     }
