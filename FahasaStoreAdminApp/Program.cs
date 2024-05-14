@@ -12,6 +12,7 @@ builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
 builder.Services.AddScoped<IPartnerTypeService, PartnerTypeService>();
+builder.Services.AddScoped<IPartnerService, PartnerService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
