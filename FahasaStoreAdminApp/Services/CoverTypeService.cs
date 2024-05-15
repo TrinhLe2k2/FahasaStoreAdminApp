@@ -1,12 +1,17 @@
-﻿using FahasaStoreAdminApp.Interfaces;
-using FahasaStoreAPI.Models.EntitiesModels;
-using FahasaStoreAPI.Models.FormModels;
+﻿using FahasaStoreAPI.Entities;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Text;
 
 namespace FahasaStoreAdminApp.Services
 {
+    public interface ICoverTypeService
+    {
+        Task<ICollection<CoverType>> GetCoverTypesAsync();
+        Task<CoverType> GetCoverTypeByIdAsync(int id);
+        Task<int> AddCoverTypeAsync(CoverType CoverType);
+        Task<int> UpdateCoverTypeAsync(int id, CoverType CoverType);
+        Task<bool> DeleteCoverTypeAsync(int id);
+    }
     public class CoverTypeService : ICoverTypeService
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -15,7 +20,7 @@ namespace FahasaStoreAdminApp.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<ICollection<CoverTypeEntities>> GetCoverTypesAsync()
+        public async Task<ICollection<CoverType>> GetCoverTypesAsync()
         {
             try
             {
@@ -24,8 +29,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync("https://localhost:7069/api/CoverTypes");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<ICollection<CoverTypeEntities>>(content);
-                    return data ?? new List<CoverTypeEntities>();
+                    var data = JsonConvert.DeserializeObject<ICollection<CoverType>>(content);
+                    return data ?? new List<CoverType>();
                 }
             }
             catch (HttpRequestException ex)
@@ -40,7 +45,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<CoverTypeEntities> GetCoverTypeByIdAsync(int id)
+        public async Task<CoverType> GetCoverTypeByIdAsync(int id)
         {
             try
             {
@@ -49,8 +54,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync($"https://localhost:7069/api/CoverTypes/{id}");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var CoverType = JsonConvert.DeserializeObject<CoverTypeEntities>(content);
-                    return CoverType ?? new CoverTypeEntities();
+                    var CoverType = JsonConvert.DeserializeObject<CoverType>(content);
+                    return CoverType ?? new CoverType();
                 }
             }
             catch (HttpRequestException ex)
@@ -63,7 +68,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> AddCoverTypeAsync(CoverTypeForm CoverType)
+        public async Task<int> AddCoverTypeAsync(CoverType CoverType)
         {
             try
             {
@@ -79,7 +84,7 @@ namespace FahasaStoreAdminApp.Services
                         throw new Exception("Error: Empty response received from API while adding CoverType.");
                     }
 
-                    var createdCoverType = JsonConvert.DeserializeObject<CoverTypeEntities>(createdContent);
+                    var createdCoverType = JsonConvert.DeserializeObject<CoverType>(createdContent);
 
                     if (createdCoverType == null)
                     {
@@ -99,7 +104,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> UpdateCoverTypeAsync(int id, CoverTypeForm CoverType)
+        public async Task<int> UpdateCoverTypeAsync(int id, CoverType CoverType)
         {
             try
             {

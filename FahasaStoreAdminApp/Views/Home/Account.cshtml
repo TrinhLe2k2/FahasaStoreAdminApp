@@ -1,5 +1,5 @@
 ﻿@using FahasaStoreAdminApp.Components
-@model FahasaStoreAPI.Models.FormModels.UserForm
+@model FahasaStoreAPI.Entities.User
 
 @{
     ViewData["Title"] = "Account";
@@ -16,7 +16,7 @@
                     <label asp-for="ImageUrl" class="control-label text-capitalize text-center d-block"></label>
                     <input asp-for="ImageUrl" class="form-control" hidden />
                     <span asp-validation-for="ImageUrl" class="text-danger"></span>
-                    @(await Html.RenderComponentAsync<ImagePreviewComponent>(RenderMode.ServerPrerendered, new { idInputFile = "SingleMenuForm_ImageUrl", isUser = true }))
+                    @(await Html.RenderComponentAsync<ImagePreviewComponent>(RenderMode.ServerPrerendered, new { idInputFile = "ImageUrl" }))
                 </div>
             </div>
         </div>

@@ -1,12 +1,17 @@
-﻿using FahasaStoreAdminApp.Interfaces;
-using FahasaStoreAPI.Models.EntitiesModels;
-using FahasaStoreAPI.Models.FormModels;
+﻿using FahasaStoreAPI.Entities;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Text;
 
 namespace FahasaStoreAdminApp.Services
 {
+    public interface IAuthorService
+    {
+        Task<ICollection<Author>> GetAuthorsAsync();
+        Task<Author> GetAuthorByIdAsync(int id);
+        Task<int> AddAuthorAsync(Author Author);
+        Task<int> UpdateAuthorAsync(int id, Author Author);
+        Task<bool> DeleteAuthorAsync(int id);
+    }
     public class AuthorService : IAuthorService
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -15,7 +20,7 @@ namespace FahasaStoreAdminApp.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<ICollection<AuthorEntities>> GetAuthorsAsync()
+        public async Task<ICollection<Author>> GetAuthorsAsync()
         {
             try
             {
@@ -24,8 +29,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync("https://localhost:7069/api/Authors");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<ICollection<AuthorEntities>>(content);
-                    return data ?? new List<AuthorEntities>();
+                    var data = JsonConvert.DeserializeObject<ICollection<Author>>(content);
+                    return data ?? new List<Author>();
                 }
             }
             catch (HttpRequestException ex)
@@ -40,7 +45,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<AuthorEntities> GetAuthorByIdAsync(int id)
+        public async Task<Author> GetAuthorByIdAsync(int id)
         {
             try
             {
@@ -49,8 +54,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync($"https://localhost:7069/api/Authors/{id}");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var Author = JsonConvert.DeserializeObject<AuthorEntities>(content);
-                    return Author ?? new AuthorEntities();
+                    var Author = JsonConvert.DeserializeObject<Author>(content);
+                    return Author ?? new Author();
                 }
             }
             catch (HttpRequestException ex)
@@ -63,7 +68,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> AddAuthorAsync(AuthorForm Author)
+        public async Task<int> AddAuthorAsync(Author Author)
         {
             try
             {
@@ -79,7 +84,7 @@ namespace FahasaStoreAdminApp.Services
                         throw new Exception("Error: Empty response received from API while adding Author.");
                     }
 
-                    var createdAuthor = JsonConvert.DeserializeObject<AuthorEntities>(createdContent);
+                    var createdAuthor = JsonConvert.DeserializeObject<Author>(createdContent);
 
                     if (createdAuthor == null)
                     {
@@ -99,7 +104,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> UpdateAuthorAsync(int id, AuthorForm Author)
+        public async Task<int> UpdateAuthorAsync(int id, Author Author)
         {
             try
             {

@@ -1,11 +1,18 @@
-﻿using FahasaStoreAdminApp.Interfaces;
-using FahasaStoreAPI.Models.EntitiesModels;
-using FahasaStoreAPI.Models.FormModels;
+﻿using FahasaStoreAPI.Entities;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace FahasaStoreAdminApp.Services
 {
+    public interface IBookService
+    {
+        Task<ICollection<Book>> GetBooksAsync();
+        Task<Book> GetBookByIdAsync(int id);
+        Task<int> AddBookAsync(Book book);
+        Task<int> UpdateBookAsync(int id, Book book);
+        Task<bool> DeleteBookAsync(int id);
+    }
+
     public class BookService : IBookService
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -14,7 +21,7 @@ namespace FahasaStoreAdminApp.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<ICollection<BookEntities>> GetBooksAsync()
+        public async Task<ICollection<Book>> GetBooksAsync()
         {
             try
             {
@@ -23,8 +30,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync("https://localhost:7069/api/Books");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<ICollection<BookEntities>>(content);
-                    return data ?? new List<BookEntities>();
+                    var data = JsonConvert.DeserializeObject<ICollection<Book>>(content);
+                    return data ?? new List<Book>();
                 }
             }
             catch (HttpRequestException ex)
@@ -39,7 +46,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<BookEntities> GetBookByIdAsync(int id)
+        public async Task<Book> GetBookByIdAsync(int id)
         {
             try
             {
@@ -48,8 +55,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync($"https://localhost:7069/api/Books/{id}");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var book = JsonConvert.DeserializeObject<BookEntities>(content);
-                    return book ?? new BookEntities();
+                    var book = JsonConvert.DeserializeObject<Book>(content);
+                    return book ?? new Book();
                 }
             }
             catch (HttpRequestException ex)
@@ -62,7 +69,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> AddBookAsync(BookForm book)
+        public async Task<int> AddBookAsync(Book book)
         {
             try
             {
@@ -78,7 +85,7 @@ namespace FahasaStoreAdminApp.Services
                         throw new Exception("Error: Empty response received from API while adding book.");
                     }
 
-                    var createdBook = JsonConvert.DeserializeObject<BookEntities>(createdContent);
+                    var createdBook = JsonConvert.DeserializeObject<Book>(createdContent);
 
                     if (createdBook == null)
                     {
@@ -98,7 +105,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> UpdateBookAsync(int id, BookForm book)
+        public async Task<int> UpdateBookAsync(int id, Book book)
         {
             try
             {

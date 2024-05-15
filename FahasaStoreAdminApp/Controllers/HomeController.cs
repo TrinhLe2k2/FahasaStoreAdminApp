@@ -1,4 +1,6 @@
 using FahasaStoreAdminApp.Models;
+using FahasaStoreAdminApp.Services;
+using FahasaStoreAPI.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,20 +9,45 @@ namespace FahasaStoreAdminApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IHomeService _homeService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IHomeService homeService)
         {
             _logger = logger;
+            _homeService = homeService;
         }
 
-        public IActionResult Index()
+        public ActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Website()
+        public async Task<ActionResult> Website()
         {
-            return View();
+            try
+            {
+                return View(await _homeService.GetWebsiteByIdAsync());
+            }
+            catch
+            {
+                return RedirectToAction("Error");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Website(Website Website)
+        {
+            try
+            {
+                Website.WebsiteId = 1;
+                var res = await _homeService.UpdateWebsite(Website);
+                return View();
+            }
+            catch
+            {
+                return View();
+            }
         }
 
         public IActionResult Account()

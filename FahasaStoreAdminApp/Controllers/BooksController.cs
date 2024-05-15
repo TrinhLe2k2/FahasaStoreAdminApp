@@ -1,0 +1,149 @@
+﻿using AutoMapper;
+using FahasaStoreAdminApp.Models;
+using FahasaStoreAdminApp.Services;
+using FahasaStoreAPI.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Diagnostics;
+
+namespace FahasaStoreAdminApp.Controllers
+{
+    public class BooksController : Controller
+    {
+        private readonly IBookService _bookService;
+        private readonly ISubcategoryService _subcategoryService;
+        private readonly IPartnerService _partnerervice;
+        private readonly IAuthorService _authorService;
+        private readonly ICoverTypeService _coverTypeService;
+        private readonly IDimensionService _dimensionService;
+        private readonly IMapper _mapper;
+        public BooksController(IBookService bookService, IMapper mapper, ISubcategoryService subcategoryService, IPartnerService partnerService,
+            IAuthorService authorService, ICoverTypeService coverTypeService, IDimensionService dimensionService)
+        {
+            _bookService = bookService;
+            _mapper = mapper;
+            _subcategoryService = subcategoryService;
+            _partnerervice = partnerService;
+            _authorService = authorService;
+            _coverTypeService = coverTypeService;
+            _dimensionService = dimensionService;
+        }
+
+        // GET: BookController
+        public async Task<ActionResult> Index()
+        {
+            try
+            {
+                return View(await _bookService.GetBooksAsync());
+            }
+            catch
+            {
+                return RedirectToAction("Error");
+            }
+        }
+
+        // GET: BookController/Details/5
+        public async Task<ActionResult> Details(int id)
+        {
+            return PartialView(await _bookService.GetBookByIdAsync(id));
+        }
+
+        // GET: BookController/Create
+        public async Task<ActionResult> Create()
+        {
+            ViewData["SubcategoryId"] = new SelectList(await _subcategoryService.GetSubcategoriesAsync(), "SubcategoryId", "Name");
+            ViewData["AuthorId"] = new SelectList(await _authorService.GetAuthorsAsync(), "AuthorId", "Name");
+            ViewData["CoverTypeId"] = new SelectList(await _coverTypeService.GetCoverTypesAsync(), "CoverTypeId", "TypeName");
+
+            var dimensions = await _dimensionService.GetDimensionsAsync();
+            var dimensionSelectList = dimensions.Select(d => new
+            {
+                DimensionId = d.DimensionId,
+                DisplayText = $"{d.Length} x {d.Width} x {d.Height}"
+            });
+            ViewData["DimensionId"] = new SelectList(dimensionSelectList, "DimensionId", "DisplayText");
+
+            return PartialView();
+        }
+
+        // POST: BookController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create(Book book)
+        {
+            try
+            {
+                var res = await _bookService.AddBookAsync(book);
+                TempData["ActiveID"] = res;
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: BookController/Edit/5
+        public async Task<ActionResult> Edit(int id)
+        {
+            ViewData["SubcategoryId"] = new SelectList(await _subcategoryService.GetSubcategoriesAsync(), "SubcategoryId", "Name");
+            ViewData["AuthorId"] = new SelectList(await _authorService.GetAuthorsAsync(), "AuthorId", "Name");
+            ViewData["CoverTypeId"] = new SelectList(await _coverTypeService.GetCoverTypesAsync(), "CoverTypeId", "TypeName");
+
+            var dimensions = await _dimensionService.GetDimensionsAsync();
+            var dimensionSelectList = dimensions.Select(d => new
+            {
+                DimensionId = d.DimensionId,
+                DisplayText = $"{d.Length} x {d.Width} x {d.Height}"
+            });
+            ViewData["DimensionId"] = new SelectList(dimensionSelectList, "DimensionId", "DisplayText");
+            return PartialView(await _bookService.GetBookByIdAsync(id));
+        }
+
+        // POST: BookController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(int id, Book book)
+        {
+            try
+            {
+                book.BookId = id;
+                var res = await _bookService.UpdateBookAsync(id, book);
+                TempData["ActiveID"] = res;
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: BookController/Delete/5
+        public async Task<ActionResult> Delete(int id)
+        {
+            return PartialView(await _bookService.GetBookByIdAsync(id));
+        }
+
+        // POST: BookController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                var bookDelete = await _bookService.DeleteBookAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
+}

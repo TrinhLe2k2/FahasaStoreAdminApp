@@ -1,12 +1,19 @@
-﻿using FahasaStoreAdminApp.Interfaces;
-using FahasaStoreAPI.Models.EntitiesModels;
-using FahasaStoreAPI.Models.FormModels;
+﻿using FahasaStoreAPI.Entities;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Text;
 
 namespace FahasaStoreAdminApp.Services
 {
+    public interface IPartnerService
+    {
+        Task<ICollection<Partner>> GetPartnersAsync();
+        Task<ICollection<Partner>> GetPartnersByType(int id);
+        Task<Partner> GetPartnerByIdAsync(int id);
+        Task<int> AddPartnerAsync(Partner Partner);
+        Task<int> UpdatePartnerAsync(int id, Partner Partner);
+        Task<bool> DeletePartnerAsync(int id);
+    }
+
     public class PartnerService : IPartnerService
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -15,7 +22,7 @@ namespace FahasaStoreAdminApp.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<ICollection<PartnerEntities>> GetPartnersAsync()
+        public async Task<ICollection<Partner>> GetPartnersAsync()
         {
             try
             {
@@ -24,8 +31,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync("https://localhost:7069/api/Partners");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<ICollection<PartnerEntities>>(content);
-                    return data ?? new List<PartnerEntities>();
+                    var data = JsonConvert.DeserializeObject<ICollection<Partner>>(content);
+                    return data ?? new List<Partner>();
                 }
             }
             catch (HttpRequestException ex)
@@ -40,7 +47,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<PartnerEntities> GetPartnerByIdAsync(int id)
+        public async Task<Partner> GetPartnerByIdAsync(int id)
         {
             try
             {
@@ -49,8 +56,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync($"https://localhost:7069/api/Partners/{id}");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var Partner = JsonConvert.DeserializeObject<PartnerEntities>(content);
-                    return Partner ?? new PartnerEntities();
+                    var Partner = JsonConvert.DeserializeObject<Partner>(content);
+                    return Partner ?? new Partner();
                 }
             }
             catch (HttpRequestException ex)
@@ -63,7 +70,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> AddPartnerAsync(PartnerForm Partner)
+        public async Task<int> AddPartnerAsync(Partner Partner)
         {
             try
             {
@@ -79,7 +86,7 @@ namespace FahasaStoreAdminApp.Services
                         throw new Exception("Error: Empty response received from API while adding Partner.");
                     }
 
-                    var createdPartner = JsonConvert.DeserializeObject<PartnerEntities>(createdContent);
+                    var createdPartner = JsonConvert.DeserializeObject<Partner>(createdContent);
 
                     if (createdPartner == null)
                     {
@@ -99,7 +106,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> UpdatePartnerAsync(int id, PartnerForm Partner)
+        public async Task<int> UpdatePartnerAsync(int id, Partner Partner)
         {
             try
             {
@@ -138,13 +145,13 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<ICollection<PartnerEntities>> GetPartnersByType(int id)
+        public async Task<ICollection<Partner>> GetPartnersByType(int id)
         {
             try
             {
                 using (var httpClient = _httpClientFactory.CreateClient())
                 {
-                    var url = $"https://localhost:7069/api/Partners/GetPartnersByType/{id}";
+                    var url = $"https://localhost:7069/api/PartnerTypes/GetPartnersByType/{id}";
                     if (id == 0)
                     {
                         url = "https://localhost:7069/api/Partners";
@@ -152,8 +159,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync(url);
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<ICollection<PartnerEntities>>(content);
-                    return data ?? new List<PartnerEntities>();
+                    var data = JsonConvert.DeserializeObject<ICollection<Partner>>(content);
+                    return data ?? new List<Partner>();
                 }
             }
             catch (HttpRequestException ex)

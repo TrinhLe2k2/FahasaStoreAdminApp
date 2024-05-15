@@ -1,12 +1,18 @@
-﻿using FahasaStoreAdminApp.Interfaces;
-using FahasaStoreAPI.Models.EntitiesModels;
-using FahasaStoreAPI.Models.FormModels;
+﻿using FahasaStoreAPI.Entities;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Text;
 
 namespace FahasaStoreAdminApp.Services
 {
+    public interface IDimensionService
+    {
+        Task<ICollection<Dimension>> GetDimensionsAsync();
+        Task<Dimension> GetDimensionByIdAsync(int id);
+        Task<int> AddDimensionAsync(Dimension Dimension);
+        Task<int> UpdateDimensionAsync(int id, Dimension Dimension);
+        Task<bool> DeleteDimensionAsync(int id);
+    }
+
     public class DimensionService : IDimensionService
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -15,7 +21,7 @@ namespace FahasaStoreAdminApp.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<ICollection<DimensionEntities>> GetDimensionsAsync()
+        public async Task<ICollection<Dimension>> GetDimensionsAsync()
         {
             try
             {
@@ -24,8 +30,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync("https://localhost:7069/api/Dimensions");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<ICollection<DimensionEntities>>(content);
-                    return data ?? new List<DimensionEntities>();
+                    var data = JsonConvert.DeserializeObject<ICollection<Dimension>>(content);
+                    return data ?? new List<Dimension>();
                 }
             }
             catch (HttpRequestException ex)
@@ -40,7 +46,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<DimensionEntities> GetDimensionByIdAsync(int id)
+        public async Task<Dimension> GetDimensionByIdAsync(int id)
         {
             try
             {
@@ -49,8 +55,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync($"https://localhost:7069/api/Dimensions/{id}");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var Dimension = JsonConvert.DeserializeObject<DimensionEntities>(content);
-                    return Dimension ?? new DimensionEntities();
+                    var Dimension = JsonConvert.DeserializeObject<Dimension>(content);
+                    return Dimension ?? new Dimension();
                 }
             }
             catch (HttpRequestException ex)
@@ -63,7 +69,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> AddDimensionAsync(DimensionForm Dimension)
+        public async Task<int> AddDimensionAsync(Dimension Dimension)
         {
             try
             {
@@ -79,7 +85,7 @@ namespace FahasaStoreAdminApp.Services
                         throw new Exception("Error: Empty response received from API while adding Dimension.");
                     }
 
-                    var createdDimension = JsonConvert.DeserializeObject<DimensionEntities>(createdContent);
+                    var createdDimension = JsonConvert.DeserializeObject<Dimension>(createdContent);
 
                     if (createdDimension == null)
                     {
@@ -99,7 +105,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> UpdateDimensionAsync(int id, DimensionForm Dimension)
+        public async Task<int> UpdateDimensionAsync(int id, Dimension Dimension)
         {
             try
             {

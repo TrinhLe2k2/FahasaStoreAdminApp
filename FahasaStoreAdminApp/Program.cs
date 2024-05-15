@@ -1,5 +1,4 @@
 using AutoMapper;
-using FahasaStoreAdminApp.Interfaces;
 using FahasaStoreAdminApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<IHomeService, HomeService>();
+builder.Services.AddScoped<IBannerService, BannerService>();
+builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<ISocialMediaLinkService, SocialMediaLinkService>();
+
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -15,6 +19,7 @@ builder.Services.AddScoped<IPartnerTypeService, PartnerTypeService>();
 builder.Services.AddScoped<IPartnerService, PartnerService>();
 builder.Services.AddScoped<ICoverTypeService, CoverTypeService>();
 builder.Services.AddScoped<IDimensionService, DimensionService>();
+builder.Services.AddScoped<IPosterImageService, PosterImageService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 

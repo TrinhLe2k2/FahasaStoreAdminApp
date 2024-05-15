@@ -1,0 +1,52 @@
+﻿@model IEnumerable<FahasaStoreAPI.Entities.Author>
+
+@{
+    ViewData["Title"] = "Quản lý tác giả";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["ActiveSidebar"] = 4;
+    ViewData["UrlCurrent"] = "/Authors/Index";
+}
+@if (TempData["ActiveID"] != null)
+{
+    <a href="/Authors/Details" id="DetailsID_@TempData["ActiveID"]" IdValue="@TempData["ActiveID"]" onclick="HandlerCRUD(this, event)"></a>
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                $('#DetailsID_@TempData["ActiveID"]').click();
+            });
+        </script>
+    }
+}
+<a href="/Authors/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
+    Create New
+</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AuthorId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuthorId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <a href="/Authors/Edit" IdValue="@item.AuthorId" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
+                    <a href="/Authors/Delete" IdValue="@item.AuthorId" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

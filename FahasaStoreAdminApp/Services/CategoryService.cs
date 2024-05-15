@@ -1,12 +1,17 @@
-﻿using FahasaStoreAdminApp.Interfaces;
-using FahasaStoreAPI.Models.EntitiesModels;
-using FahasaStoreAPI.Models.FormModels;
+﻿using FahasaStoreAPI.Entities;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Text;
 
 namespace FahasaStoreAdminApp.Services
 {
+    public interface ICategoryService
+    {
+        Task<ICollection<Category>> GetCategorysAsync();
+        Task<Category> GetCategoryByIdAsync(int id);
+        Task<int> AddCategoryAsync(Category Category);
+        Task<int> UpdateCategoryAsync(int id, Category Category);
+        Task<bool> DeleteCategoryAsync(int id);
+    }
     public class CategoryService : ICategoryService
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -15,7 +20,7 @@ namespace FahasaStoreAdminApp.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<ICollection<CategoryEntities>> GetCategorysAsync()
+        public async Task<ICollection<Category>> GetCategorysAsync()
         {
             try
             {
@@ -24,8 +29,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync("https://localhost:7069/api/Categories");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<ICollection<CategoryEntities>>(content);
-                    return data ?? new List<CategoryEntities>();
+                    var data = JsonConvert.DeserializeObject<ICollection<Category>>(content);
+                    return data ?? new List<Category>();
                 }
             }
             catch (HttpRequestException ex)
@@ -40,7 +45,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<CategoryEntities> GetCategoryByIdAsync(int id)
+        public async Task<Category> GetCategoryByIdAsync(int id)
         {
             try
             {
@@ -49,8 +54,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync($"https://localhost:7069/api/Categories/{id}");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var Category = JsonConvert.DeserializeObject<CategoryEntities>(content);
-                    return Category ?? new CategoryEntities();
+                    var Category = JsonConvert.DeserializeObject<Category>(content);
+                    return Category ?? new Category();
                 }
             }
             catch (HttpRequestException ex)
@@ -63,7 +68,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> AddCategoryAsync(CategoryForm Category)
+        public async Task<int> AddCategoryAsync(Category Category)
         {
             try
             {
@@ -79,7 +84,7 @@ namespace FahasaStoreAdminApp.Services
                         throw new Exception("Error: Empty response received from API while adding Category.");
                     }
 
-                    var createdCategory = JsonConvert.DeserializeObject<CategoryEntities>(createdContent);
+                    var createdCategory = JsonConvert.DeserializeObject<Category>(createdContent);
 
                     if (createdCategory == null)
                     {
@@ -99,7 +104,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> UpdateCategoryAsync(int id, CategoryForm Category)
+        public async Task<int> UpdateCategoryAsync(int id, Category Category)
         {
             try
             {

@@ -1,12 +1,19 @@
-﻿using FahasaStoreAdminApp.Interfaces;
-using FahasaStoreAPI.Models.EntitiesModels;
-using FahasaStoreAPI.Models.FormModels;
+﻿using FahasaStoreAPI.Entities;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Text;
 
 namespace FahasaStoreAdminApp.Services
 {
+    public interface ISubcategoryService
+    {
+        Task<ICollection<Subcategory>> GetSubcategoriesAsync();
+        Task<Subcategory> GetSubcategoryByIdAsync(int id);
+        Task<int> AddSubcategoryAsync(Subcategory Subcategory);
+        Task<int> UpdateSubcategoryAsync(int id, Subcategory Subcategory);
+        Task<bool> DeleteSubcategoryAsync(int id);
+        Task<ICollection<Subcategory>> GetSubcategoriesByCategoryAsync(int id);
+    }
+
     public class SubcategoryService : ISubcategoryService
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -15,7 +22,7 @@ namespace FahasaStoreAdminApp.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<ICollection<SubcategoryEntities>> GetSubcategoriesAsync()
+        public async Task<ICollection<Subcategory>> GetSubcategoriesAsync()
         {
             try
             {
@@ -24,8 +31,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync("https://localhost:7069/api/Subcategories");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<ICollection<SubcategoryEntities>>(content);
-                    return data ?? new List<SubcategoryEntities>();
+                    var data = JsonConvert.DeserializeObject<ICollection<Subcategory>>(content);
+                    return data ?? new List<Subcategory>();
                 }
             }
             catch (HttpRequestException ex)
@@ -40,7 +47,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<SubcategoryEntities> GetSubcategoryByIdAsync(int id)
+        public async Task<Subcategory> GetSubcategoryByIdAsync(int id)
         {
             try
             {
@@ -49,8 +56,8 @@ namespace FahasaStoreAdminApp.Services
                     var response = await httpClient.GetAsync($"https://localhost:7069/api/Subcategories/{id}");
                     response.EnsureSuccessStatusCode();
                     var content = await response.Content.ReadAsStringAsync();
-                    var Subcategory = JsonConvert.DeserializeObject<SubcategoryEntities>(content);
-                    return Subcategory ?? new SubcategoryEntities();
+                    var Subcategory = JsonConvert.DeserializeObject<Subcategory>(content);
+                    return Subcategory ?? new Subcategory();
                 }
             }
             catch (HttpRequestException ex)
@@ -63,7 +70,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> AddSubcategoryAsync(SubcategoryForm Subcategory)
+        public async Task<int> AddSubcategoryAsync(Subcategory Subcategory)
         {
             try
             {
@@ -79,7 +86,7 @@ namespace FahasaStoreAdminApp.Services
                         throw new Exception("Error: Empty response received from API while adding Subcategory.");
                     }
 
-                    var createdSubcategory = JsonConvert.DeserializeObject<SubcategoryEntities>(createdContent);
+                    var createdSubcategory = JsonConvert.DeserializeObject<Subcategory>(createdContent);
 
                     if (createdSubcategory == null)
                     {
@@ -99,7 +106,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> UpdateSubcategoryAsync(int id, SubcategoryForm Subcategory)
+        public async Task<int> UpdateSubcategoryAsync(int id, Subcategory Subcategory)
         {
             try
             {
@@ -121,6 +128,33 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
+        public async Task<ICollection<Subcategory>> GetSubcategoriesByCategoryAsync(int id)
+        {
+            try
+            {
+                var url = $"https://localhost:7069/api/Categories/GetSubcategories/{id}";
+                if (id == 0) url = "https://localhost:7069/api/Subcategories";
+                using (var httpClient = _httpClientFactory.CreateClient())
+                {
+                    var response = await httpClient.GetAsync(url);
+                    response.EnsureSuccessStatusCode();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<ICollection<Subcategory>>(content);
+                    return data ?? new List<Subcategory>();
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                // Xử lý exception, có thể ghi log hoặc thực hiện các hành động phù hợp khác
+                throw new Exception("Error occurred while fetching Subcategorys from API.", ex);
+            }
+            catch (JsonException ex)
+            {
+                // Xử lý exception phân tích cú pháp JSON
+                throw new Exception("Error occurred while parsing JSON response.", ex);
+            }
+        }
+
         public async Task<bool> DeleteSubcategoryAsync(int id)
         {
             try
@@ -135,36 +169,6 @@ namespace FahasaStoreAdminApp.Services
             catch (HttpRequestException ex)
             {
                 throw new Exception($"Error occurred while deleting Subcategory with ID {id} from API.", ex);
-            }
-        }
-
-        public async Task<ICollection<SubcategoryEntities>> GetSubcategoriesByCategoryID(int id)
-        {
-            try
-            {
-                using (var httpClient = _httpClientFactory.CreateClient())
-                {
-                    var url = $"https://localhost:7069/api/Subcategories/GetSubcategoriesByCategoryID/{id}";
-                    if (id == 0)
-                    {
-                        url = "https://localhost:7069/api/Subcategories";
-                    }
-                    var response = await httpClient.GetAsync(url);
-                    response.EnsureSuccessStatusCode();
-                    var content = await response.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<ICollection<SubcategoryEntities>>(content);
-                    return data ?? new List<SubcategoryEntities>();
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                // Xử lý exception, có thể ghi log hoặc thực hiện các hành động phù hợp khác
-                throw new Exception("Error occurred while fetching Subcategorys from API.", ex);
-            }
-            catch (JsonException ex)
-            {
-                // Xử lý exception phân tích cú pháp JSON
-                throw new Exception("Error occurred while parsing JSON response.", ex);
             }
         }
     }

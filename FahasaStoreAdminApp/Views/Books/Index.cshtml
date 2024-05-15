@@ -1,0 +1,79 @@
+﻿@model IEnumerable<FahasaStoreAPI.Entities.Book>
+
+@{
+    ViewData["Title"] = "Quản lý sách";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["ActiveSidebar"] = 4;
+    ViewData["UrlCurrent"] = "/Books/Index";
+    var ActiveID = TempData["ActiveID"] as int?;
+}
+@if (ActiveID != null)
+{
+    <a href="/Books/Details" id="DetailsID_@ActiveID" IdValue="@ActiveID" onclick="HandlerCRUD(this, event)"></a>
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                $('#DetailsID_@ActiveID').click();
+            });
+        </script>
+    }
+}
+
+<a href="/Books/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
+    Create New
+</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BookId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OriginalPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DiscountPercentage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookId)
+                </td>
+                <td>
+                    <a href="/Books/Details" IdValue="@item.BookId" onclick="HandlerCRUD(this, event)">@item.Name</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OriginalPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CurrentPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DiscountPercentage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    <a href="/Books/Edit" IdValue="@item.BookId" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
+                    <a href="/Books/Delete" IdValue="@item.BookId" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

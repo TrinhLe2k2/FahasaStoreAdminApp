@@ -31,7 +31,7 @@ const HandlerCRUD = (e, event) => {
             $('#modal-for-crud').html(data);
         },
         error: function () {
-            console.error('Error fetching');
+            alert('Error fetching');
         }
     });
 }
