@@ -92,7 +92,7 @@ namespace FahasaStoreAdminApp.Services
                         throw new Exception("Error: Failed to deserialize response from API while adding PosterImage.");
                     }
 
-                    return createdPosterImage.PosterImgageId;
+                    return createdPosterImage.PosterImageId;
                 }
             }
             catch (HttpRequestException ex)

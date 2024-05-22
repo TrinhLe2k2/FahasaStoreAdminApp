@@ -8,6 +8,7 @@ namespace FahasaStoreAdminApp.Services
     {
         Task<ICollection<Book>> GetBooksAsync();
         Task<Book> GetBookByIdAsync(int id);
+        Task<ICollection<PosterImage>> GetPosterImagesAsync(int id);
         Task<int> AddBookAsync(Book book);
         Task<int> UpdateBookAsync(int id, Book book);
         Task<bool> DeleteBookAsync(int id);
@@ -141,6 +142,29 @@ namespace FahasaStoreAdminApp.Services
             catch (HttpRequestException ex)
             {
                 throw new Exception($"Error occurred while deleting book with ID {id} from API.", ex);
+            }
+        }
+
+        public async Task<ICollection<PosterImage>> GetPosterImagesAsync(int id)
+        {
+            try
+            {
+                using (var httpClient = _httpClientFactory.CreateClient())
+                {
+                    var response = await httpClient.GetAsync($"https://localhost:7069/api/Books/GetPosterImages/{id}");
+                    response.EnsureSuccessStatusCode();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var posterImages = JsonConvert.DeserializeObject<ICollection<PosterImage>>(content);
+                    return posterImages ?? new List<PosterImage>();
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"Error occurred while fetching book with ID {id} from API.", ex);
+            }
+            catch (JsonException ex)
+            {
+                throw new Exception("Error occurred while parsing JSON response.", ex);
             }
         }
     }

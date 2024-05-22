@@ -6,17 +6,9 @@
     ViewData["ActiveSidebar"] = 4;
     ViewData["UrlCurrent"] = "/Authors/Index";
 }
-@if (TempData["ActiveID"] != null)
-{
-    <a href="/Authors/Details" id="DetailsID_@TempData["ActiveID"]" IdValue="@TempData["ActiveID"]" onclick="HandlerCRUD(this, event)"></a>
-    @section Scripts {
-        <script>
-            $(document).ready(function () {
-                $('#DetailsID_@TempData["ActiveID"]').click();
-            });
-        </script>
-    }
-}
+
+<partial name="_ToastrMessage" />
+
 <a href="/Authors/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
     Create New
 </a>

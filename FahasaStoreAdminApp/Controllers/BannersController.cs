@@ -1,4 +1,5 @@
-﻿using FahasaStoreAdminApp.Models;
+﻿using BookStoreAPI.Services;
+using FahasaStoreAdminApp.Models;
 using FahasaStoreAdminApp.Services;
 using FahasaStoreAPI.Entities;
 using Microsoft.AspNetCore.Http;
@@ -10,9 +11,11 @@ namespace FahasaStoreAdminApp.Controllers
     public class BannersController : Controller
     {
         private readonly IBannerService _BannerService;
-        public BannersController(IBannerService BannerService)
+        private readonly IImageUploader _imageUploader;
+        public BannersController(IBannerService BannerService, IImageUploader imageUploader)
         {
             _BannerService = BannerService;
+            _imageUploader = imageUploader;
         }
 
         // GET: BannerController
@@ -43,16 +46,17 @@ namespace FahasaStoreAdminApp.Controllers
         // POST: BannerController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Banner Banner)
+        public async Task<ActionResult> Create(Banner Banner, IFormFile fileImage)
         {
             try
             {
-                if (Banner.ImageUrl == null)
-                {
-                    Banner.ImageUrl = "https://voduongngochoa.com/uploads/noimg.jpg";
-                }
+                var resImgUploader = await _imageUploader.UploadImageAsync(fileImage, "Banner");
+                Banner.PublicId = resImgUploader.PublicId;
+                Banner.ImageUrl = resImgUploader.Url;
+
                 Banner.CreatedAt = DateTime.Now;
                 var res = await _BannerService.AddBannerAsync(Banner);
+                TempData["SuccessMessage"] = "Thêm mới thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -70,14 +74,28 @@ namespace FahasaStoreAdminApp.Controllers
         // POST: BannerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, Banner Banner)
+        public async Task<ActionResult> Edit(int id, Banner Banner, IFormFile fileImage)
         {
             try
             {
                 var bannerEdit = await _BannerService.GetBannerByIdAsync(id);
+                if (fileImage == null)
+                {
+                    Banner.PublicId = bannerEdit.PublicId;
+                    Banner.ImageUrl = bannerEdit.ImageUrl;
+                }
+                else
+                {
+                    var deleteImg = await _imageUploader.RemoveImageAsync(bannerEdit.PublicId);
+                    var resImageUploader = await _imageUploader.UploadImageAsync(fileImage, "Banner");
+                    Banner.PublicId = resImageUploader.PublicId;
+                    Banner.ImageUrl = resImageUploader.Url;
+                }
                 Banner.BannerId = id;
                 Banner.CreatedAt = bannerEdit.CreatedAt;
+
                 var res = await _BannerService.UpdateBannerAsync(id, Banner);
+                TempData["SuccessMessage"] = "Chỉnh sửa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -99,7 +117,10 @@ namespace FahasaStoreAdminApp.Controllers
         {
             try
             {
-                var BannerDelete = await _BannerService.DeleteBannerAsync(id);
+                var BannerDelete = await _BannerService.GetBannerByIdAsync(id);
+                var deleteImg = await _imageUploader.RemoveImageAsync(BannerDelete.PublicId);
+                var Delete = await _BannerService.DeleteBannerAsync(id);
+                TempData["SuccessMessage"] = "Xóa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch

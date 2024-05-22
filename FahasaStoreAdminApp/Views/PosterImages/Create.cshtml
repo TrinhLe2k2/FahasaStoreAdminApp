@@ -1,0 +1,36 @@
+﻿@using FahasaStoreAPI.Entities
+@using FahasaStoreAdminApp.Components
+
+@{
+    var modelPosterImage = new PosterImage();
+    var ImageUrl = modelPosterImage.ImageUrl;
+}
+
+<form asp-controller="PosterImages" asp-action="Create" id="posterForm" >
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <input type="file" name="fileImage" class="form-control" id="fileImage" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+@* @(await Html.RenderComponentAsync<ImagePreviewComponent>(RenderMode.ServerPrerendered, new { idInputFile = "ImageUrl" })) *@
+
+<script>
+    // $(document).ready(function () {
+    //     var element = $('input[name="ImageUrl"]');
+    //     var previousValue = element.val(); // Lưu giá trị trước đó của input
+    //     element.on('change', function () {
+    //         alert(0)
+    //         var currentValue = $(this).val();
+    //         if (currentValue !== previousValue) {
+    //             alert(1)
+    //         }
+    //     });
+    // });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

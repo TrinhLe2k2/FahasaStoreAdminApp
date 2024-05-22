@@ -8,6 +8,7 @@
     ViewData["UrlCurrent"] = "/Partners/Index";
     var PartnerTypes = ViewData["PartnerTypes"] as List<PartnerType>;
 }
+<partial name="_ToastrMessage" />
 <div class="d-flex justify-content-between">
     <a href="/Partners/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
         Create New

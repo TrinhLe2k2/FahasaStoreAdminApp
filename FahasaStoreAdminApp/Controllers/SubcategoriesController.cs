@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookStoreAPI.Services;
 using FahasaStoreAdminApp.Models;
 using FahasaStoreAdminApp.Services;
 using FahasaStoreAPI.Entities;
@@ -13,11 +14,13 @@ namespace FahasaStoreAdminApp.Controllers
         private readonly ISubcategoryService _SubcategoryService;
         private readonly ICategoryService _CategoryService;
         private readonly IMapper _mapper;
-        public SubcategoriesController(ISubcategoryService SubcategoryService, IMapper mapper, ICategoryService categoryService)
+        private readonly IImageUploader _imageUploader;
+        public SubcategoriesController(ISubcategoryService SubcategoryService, IMapper mapper, ICategoryService categoryService, IImageUploader imageUploader)
         {
             _SubcategoryService = SubcategoryService;
             _mapper = mapper;
             _CategoryService = categoryService;
+            _imageUploader = imageUploader;
         }
 
         // GET: SubcategoryController
@@ -50,15 +53,16 @@ namespace FahasaStoreAdminApp.Controllers
         // POST: SubcategoryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Subcategory Subcategory)
+        public async Task<ActionResult> Create(Subcategory Subcategory, IFormFile fileImage)
         {
             try
             {
-                if (Subcategory.ImageUrl == null)
-                {
-                    Subcategory.ImageUrl = "https://voduongngochoa.com/uploads/noimg.jpg";
-                }
+                var resImgUploader = await _imageUploader.UploadImageAsync(fileImage, "Subcategory");
+                Subcategory.PublicId = resImgUploader.PublicId;
+                Subcategory.ImageUrl = resImgUploader.Url;
+
                 var res = await _SubcategoryService.AddSubcategoryAsync(Subcategory);
+                TempData["SuccessMessage"] = "Thêm mới thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -78,12 +82,27 @@ namespace FahasaStoreAdminApp.Controllers
         // POST: SubcategoryController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, Subcategory Subcategory)
+        public async Task<ActionResult> Edit(int id, Subcategory Subcategory, IFormFile fileImage)
         {
             try
             {
+                var SubcategoryEdit = await _SubcategoryService.GetSubcategoryByIdAsync(id);
+                if (fileImage == null)
+                {
+                    Subcategory.PublicId = SubcategoryEdit.PublicId;
+                    Subcategory.ImageUrl = SubcategoryEdit.ImageUrl;
+                }
+                else
+                {
+                    var deleteImg = await _imageUploader.RemoveImageAsync(SubcategoryEdit.PublicId);
+                    var resImageUploader = await _imageUploader.UploadImageAsync(fileImage, "Subcategory");
+                    Subcategory.PublicId = resImageUploader.PublicId;
+                    Subcategory.ImageUrl = resImageUploader.Url;
+                }
+
                 Subcategory.SubcategoryId = id;
                 var res = await _SubcategoryService.UpdateSubcategoryAsync(id, Subcategory);
+                TempData["SuccessMessage"] = "Chỉnh sửa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -105,7 +124,11 @@ namespace FahasaStoreAdminApp.Controllers
         {
             try
             {
+                var SubcategoryEdit = await _SubcategoryService.GetSubcategoryByIdAsync(id);
+                var deleteImg = await _imageUploader.RemoveImageAsync(SubcategoryEdit.PublicId);
+
                 var SubcategoryDelete = await _SubcategoryService.DeleteSubcategoryAsync(id);
+                TempData["SuccessMessage"] = "Xóa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch

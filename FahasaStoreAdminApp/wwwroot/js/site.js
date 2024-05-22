@@ -30,8 +30,13 @@ const HandlerCRUD = (e, event) => {
         success: function (data) {
             $('#modal-for-crud').html(data);
         },
-        error: function () {
-            alert('Error fetching');
+        error: function (jqXHR, textStatus, errorThrown) {
+            var errorMessage = `Error fetching data: ${jqXHR.status} ${jqXHR.statusText}`;
+            if (jqXHR.responseText) {
+                errorMessage += `\nResponse: ${jqXHR.responseText}`;
+            }
+            alert(errorMessage);
         }
     });
 }
+

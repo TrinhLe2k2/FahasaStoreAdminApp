@@ -50,7 +50,7 @@ namespace FahasaStoreAdminApp.Controllers
             try
             {
                 var res = await _CoverTypeService.AddCoverTypeAsync(CoverType);
-                
+                TempData["SuccessMessage"] = "Thêm mới thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -74,6 +74,7 @@ namespace FahasaStoreAdminApp.Controllers
             {
                 CoverType.CoverTypeId = id;
                 var res = await _CoverTypeService.UpdateCoverTypeAsync(id, CoverType);
+                TempData["SuccessMessage"] = "Chỉnh sửa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -96,6 +97,7 @@ namespace FahasaStoreAdminApp.Controllers
             try
             {
                 var CoverTypeDelete = await _CoverTypeService.DeleteCoverTypeAsync(id);
+                TempData["SuccessMessage"] = "Xóa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch

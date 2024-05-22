@@ -50,7 +50,7 @@ namespace FahasaStoreAdminApp.Controllers
             try
             {
                 var res = await _DimensionService.AddDimensionAsync(Dimension);
-                
+                TempData["SuccessMessage"] = "Thêm mới thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -74,6 +74,7 @@ namespace FahasaStoreAdminApp.Controllers
             {
                 Dimension.DimensionId = id;
                 var res = await _DimensionService.UpdateDimensionAsync(id, Dimension);
+                TempData["SuccessMessage"] = "Chỉnh sửa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -96,6 +97,7 @@ namespace FahasaStoreAdminApp.Controllers
             try
             {
                 var DimensionDelete = await _DimensionService.DeleteDimensionAsync(id);
+                TempData["SuccessMessage"] = "Xóa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch

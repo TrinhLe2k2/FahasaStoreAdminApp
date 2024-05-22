@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookStoreAPI.Services;
 using FahasaStoreAdminApp.Models;
 using FahasaStoreAdminApp.Services;
 using FahasaStoreAPI.Entities;
@@ -11,10 +12,13 @@ namespace FahasaStoreAdminApp.Controllers
     {
         private readonly ICategoryService _CategoryService;
         private readonly IMapper _mapper;
-        public CategoriesController(ICategoryService CategoryService, IMapper mapper)
+        private readonly IImageUploader _imageUploader;
+
+        public CategoriesController(ICategoryService CategoryService, IMapper mapper, IImageUploader imageUploader)
         {
             _CategoryService = CategoryService;
             _mapper = mapper;
+            _imageUploader = imageUploader;
         }
 
         // GET: CategoryController
@@ -45,15 +49,16 @@ namespace FahasaStoreAdminApp.Controllers
         // POST: CategoryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Category Category)
+        public async Task<ActionResult> Create(Category Category, IFormFile fileImage)
         {
             try
             {
-                if (Category.ImageUrl == null)
-                {
-                    Category.ImageUrl = "https://voduongngochoa.com/uploads/noimg.jpg";
-                }
+                var resImgUploader = await _imageUploader.UploadImageAsync(fileImage, "Category");
+                Category.PublicId = resImgUploader.PublicId;
+                Category.ImageUrl = resImgUploader.Url;
+
                 var res = await _CategoryService.AddCategoryAsync(Category);
+                TempData["SuccessMessage"] = "Thêm mới thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -72,12 +77,26 @@ namespace FahasaStoreAdminApp.Controllers
         // POST: CategoryController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, Category Category)
+        public async Task<ActionResult> Edit(int id, Category Category, IFormFile fileImage)
         {
             try
             {
+                var categoryEdit = await _CategoryService.GetCategoryByIdAsync(id);
+                if (fileImage == null)
+                {
+                    Category.PublicId = categoryEdit.PublicId;
+                    Category.ImageUrl = categoryEdit.ImageUrl;
+                }
+                else
+                {
+                    var deleteImg = await _imageUploader.RemoveImageAsync(categoryEdit.PublicId);
+                    var resImageUploader = await _imageUploader.UploadImageAsync(fileImage, "Category");
+                    Category.PublicId = resImageUploader.PublicId;
+                    Category.ImageUrl = resImageUploader.Url;
+                }
                 Category.CategoryId = id;
                 var res = await _CategoryService.UpdateCategoryAsync(id, Category);
+                TempData["SuccessMessage"] = "Chỉnh sửa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -99,7 +118,10 @@ namespace FahasaStoreAdminApp.Controllers
         {
             try
             {
-                var CategoryDelete = await _CategoryService.DeleteCategoryAsync(id);
+                var CategoryDelete = await _CategoryService.GetCategoryByIdAsync(id);
+                var deleteImg = await _imageUploader.RemoveImageAsync(CategoryDelete.PublicId);
+                var Delete = await _CategoryService.DeleteCategoryAsync(id);
+                TempData["SuccessMessage"] = "Xóa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch

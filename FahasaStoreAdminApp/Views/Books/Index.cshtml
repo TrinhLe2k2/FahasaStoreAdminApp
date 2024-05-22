@@ -7,17 +7,22 @@
     ViewData["UrlCurrent"] = "/Books/Index";
     var ActiveID = TempData["ActiveID"] as int?;
 }
-@if (ActiveID != null)
-{
-    <a href="/Books/Details" id="DetailsID_@ActiveID" IdValue="@ActiveID" onclick="HandlerCRUD(this, event)"></a>
-    @section Scripts {
+
+@{
+    if (ActiveID != null)
+    {
+        <a href="/Books/Details" id="DetailsID_@ActiveID" IdValue="@ActiveID" onclick="HandlerCRUD(this, event)"></a>
+        @section Scripts {
         <script>
             $(document).ready(function () {
                 $('#DetailsID_@ActiveID').click();
-            });
-        </script>
+                });
+            </script>
+        }
     }
 }
+
+<partial name="_ToastrMessage"/>
 
 <a href="/Books/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
     Create New
@@ -32,10 +37,7 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OriginalPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CurrentPrice)
+                @Html.DisplayNameFor(model => model.Price)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DiscountPercentage)
@@ -57,10 +59,7 @@
                     <a href="/Books/Details" IdValue="@item.BookId" onclick="HandlerCRUD(this, event)">@item.Name</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OriginalPrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CurrentPrice)
+                    @Html.DisplayFor(modelItem => item.Price)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DiscountPercentage)

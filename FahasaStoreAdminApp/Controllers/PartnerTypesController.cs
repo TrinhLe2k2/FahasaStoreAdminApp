@@ -50,6 +50,7 @@ namespace FahasaStoreAdminApp.Controllers
             try
             {
                 var res = await _PartnerTypeService.AddPartnerTypeAsync(PartnerType);
+                TempData["SuccessMessage"] = "Thêm mới thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -74,6 +75,7 @@ namespace FahasaStoreAdminApp.Controllers
             {
                 PartnerType.PartnerTypeId = id;
                 var res = await _PartnerTypeService.UpdatePartnerTypeAsync(id, PartnerType);
+                TempData["SuccessMessage"] = "Chỉnh sửa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -96,6 +98,7 @@ namespace FahasaStoreAdminApp.Controllers
             try
             {
                 var PartnerTypeDelete = await _PartnerTypeService.DeletePartnerTypeAsync(id);
+                TempData["SuccessMessage"] = "Xóa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch

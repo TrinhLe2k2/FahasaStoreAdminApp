@@ -1,4 +1,5 @@
-﻿@model FahasaStoreAPI.Entities.Book
+﻿@using FahasaStoreAdminApp.Components
+@model FahasaStoreAPI.Entities.Book
 
 <div>
     <!-- Button trigger modal -->
@@ -15,86 +16,93 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <dl class="row">
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.BookId)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.BookId)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Subcategory)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Model.Subcategory?.Name
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Author)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Model.Author?.Name
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.CoverType)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Model.CoverType?.TypeName
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Dimension)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Model.Dimension?.Length x @Model.Dimension?.Width x @Model.Dimension?.Height @Model.Dimension?.Unit
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Name)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.Name)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Description)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.Description)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.OriginalPrice)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.OriginalPrice)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.CurrentPrice)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.CurrentPrice)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.DiscountPercentage)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.DiscountPercentage)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Quantity)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.Quantity)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Weight)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.Weight)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.PageCount)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.PageCount)
-                        </dd>
-                    </dl>
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="mb-3">
+                                <strong>
+                                    @Html.DisplayNameFor(model => model.PosterImages)
+                                </strong>
+                            </div>
+                            <div id="listPosterImages">
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <dl class="row">
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.BookId)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.BookId)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.Subcategory)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Model.Subcategory?.Name
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.Author)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Model.Author?.Name
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.CoverType)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Model.CoverType?.TypeName
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.Dimension)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Model.Dimension?.Length x @Model.Dimension?.Width x @Model.Dimension?.Height @Model.Dimension?.Unit
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.Name)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.Description)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.Description)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.Price)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.Price)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.DiscountPercentage)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.DiscountPercentage)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.Quantity)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.Quantity)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.Weight)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.Weight)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.PageCount)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.PageCount)
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -103,4 +111,22 @@
 
 <script>
     $("#btn-toggle").click();
+    $(document).ready(function () {
+        var element = $("#listPosterImages");
+        $.ajax({
+            url: '/Books/GetPosterImages/' + @Model.BookId,
+            type: 'GET',
+            success: function (data) {
+                $(element).html(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                var errorMessage = `Error fetching data: ${jqXHR.status} ${jqXHR.statusText}`;
+                if (jqXHR.responseText) {
+                    errorMessage += `\nResponse: ${jqXHR.responseText}`;
+                }
+                alert(errorMessage);
+            }
+        });
+    });
+
 </script>

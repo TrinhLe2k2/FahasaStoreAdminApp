@@ -1,22 +1,23 @@
-﻿@model IEnumerable<FahasaStoreAPI.Entities.SocialMediaLink>
+﻿@model IEnumerable<FahasaStoreAPI.Entities.Platform>
 
 @{
     ViewData["Title"] = "Quản lý liên kết mạng xã hội";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["ActiveSidebar"] = 3;
-    ViewData["UrlCurrent"] = "/SocialMediaLinks/Index";
+    ViewData["UrlCurrent"] = "/Platform/Index";
 }
-<a href="/SocialMediaLinks/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
+<partial name="_ToastrMessage" />
+<a href="/Platform/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
     Create New
 </a>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.LinkId)
+                @Html.DisplayNameFor(model => model.PlatformId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Platform)
+                @Html.DisplayNameFor(model => model.PlatformName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ImageUrl)
@@ -31,10 +32,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.LinkId)
+                @Html.DisplayFor(modelItem => item.PlatformId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Platform)
+                @Html.DisplayFor(modelItem => item.PlatformName)
             </td>
             <td>
                 <img src="@item.ImageUrl" alt="Image" width="50" height="50" class="object-fit-contain" />
@@ -43,8 +44,8 @@
                 @Html.DisplayFor(modelItem => item.Link)
             </td>
             <td>
-                    <a href="/SocialMediaLinks/Edit" IdValue="@item.LinkId" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
-                    <a href="/SocialMediaLinks/Delete" IdValue="@item.LinkId" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
+                    <a href="/Platform/Edit" IdValue="@item.PlatformId" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
+                    <a href="/Platform/Delete" IdValue="@item.PlatformId" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
             </td>
         </tr>
 }

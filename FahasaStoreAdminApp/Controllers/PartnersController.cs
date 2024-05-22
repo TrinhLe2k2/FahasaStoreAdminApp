@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookStoreAPI.Services;
 using FahasaStoreAdminApp.Models;
 using FahasaStoreAdminApp.Services;
 using FahasaStoreAPI.Entities;
@@ -13,11 +14,13 @@ namespace FahasaStoreAdminApp.Controllers
         private readonly IPartnerService _PartnerService;
         private readonly IPartnerTypeService _PartnerTypeService;
         private readonly IMapper _mapper;
-        public PartnersController(IPartnerService PartnerService, IMapper mapper, IPartnerTypeService PartnerTypeService)
+        private readonly IImageUploader _imageUploader;
+        public PartnersController(IPartnerService PartnerService, IMapper mapper, IPartnerTypeService PartnerTypeService, IImageUploader imageUploader)
         {
             _PartnerService = PartnerService;
             _mapper = mapper;
             _PartnerTypeService = PartnerTypeService;
+            _imageUploader = imageUploader;
         }
 
         // GET: PartnerController
@@ -50,15 +53,16 @@ namespace FahasaStoreAdminApp.Controllers
         // POST: PartnerController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Partner Partner)
+        public async Task<ActionResult> Create(Partner Partner, IFormFile fileImage)
         {
             try
             {
-                if (Partner.ImageUrl == null)
-                {
-                    Partner.ImageUrl = "https://voduongngochoa.com/uploads/noimg.jpg";
-                }
+                var resImgUploader = await _imageUploader.UploadImageAsync(fileImage, "Partner");
+                Partner.PublicId = resImgUploader.PublicId;
+                Partner.ImageUrl = resImgUploader.Url;
+
                 var res = await _PartnerService.AddPartnerAsync(Partner);
+                TempData["SuccessMessage"] = "Thêm mới thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -78,12 +82,26 @@ namespace FahasaStoreAdminApp.Controllers
         // POST: PartnerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, Partner Partner)
+        public async Task<ActionResult> Edit(int id, Partner Partner, IFormFile fileImage)
         {
             try
             {
+                var PartnerEdit = await _PartnerService.GetPartnerByIdAsync(id);
+                if (fileImage == null)
+                {
+                    Partner.PublicId = PartnerEdit.PublicId;
+                    Partner.ImageUrl = PartnerEdit.ImageUrl;
+                }
+                else
+                {
+                    var deleteImg = await _imageUploader.RemoveImageAsync(PartnerEdit.PublicId);
+                    var resImageUploader = await _imageUploader.UploadImageAsync(fileImage, "Partner");
+                    Partner.PublicId = resImageUploader.PublicId;
+                    Partner.ImageUrl = resImageUploader.Url;
+                }
                 Partner.PartnerId = id;
                 var res = await _PartnerService.UpdatePartnerAsync(id, Partner);
+                TempData["SuccessMessage"] = "Chỉnh sửa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -106,6 +124,7 @@ namespace FahasaStoreAdminApp.Controllers
             try
             {
                 var PartnerDelete = await _PartnerService.DeletePartnerAsync(id);
+                TempData["SuccessMessage"] = "Xóa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch

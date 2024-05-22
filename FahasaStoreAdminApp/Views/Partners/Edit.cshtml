@@ -10,7 +10,7 @@
     <!-- Modal -->
     <div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <form asp-action="Edit">
+            <form asp-action="Edit" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="modal-content">
                     <div class="modal-header">
@@ -22,10 +22,9 @@
                             <div class="col-md-4">
                                 <div class="d-flex flex-md-column align-items-center justify-content-around">
                                     <div class="form-group">
-                                        <label asp-for="ImageUrl" class="control-label"></label>
-                                        <input asp-for="ImageUrl" hidden class="form-control" />
-                                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
-                                        @(await Html.RenderComponentAsync<ImagePreviewComponent>(RenderMode.ServerPrerendered, new { idInputFile = "ImageUrl" }))
+                                        <label asp-for="ImageUrl" class="control-label text-center d-block"></label>
+                                        <input type="file" name="fileImage" class="form-control" id="fileImage" value="@Model.ImageUrl" hidden />
+                                        @(await Html.RenderComponentAsync<ImagePreviewComponent>(RenderMode.ServerPrerendered, new { idInputFile = "fileImage" }))
                                     </div>
                                 </div>
                             </div>

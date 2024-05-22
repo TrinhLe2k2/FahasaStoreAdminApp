@@ -50,6 +50,7 @@ namespace FahasaStoreAdminApp.Controllers
             try
             {
                 var res = await _AuthorService.AddAuthorAsync(Author);
+                TempData["SuccessMessage"] = "Đã thêm tác giả mới thành công: ";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -73,6 +74,7 @@ namespace FahasaStoreAdminApp.Controllers
             {
                 Author.AuthorId = id;
                 var res = await _AuthorService.UpdateAuthorAsync(id, Author);
+                TempData["SuccessMessage"] = "Đã cập nhật thành công:";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -95,6 +97,7 @@ namespace FahasaStoreAdminApp.Controllers
             try
             {
                 var AuthorDelete = await _AuthorService.DeleteAuthorAsync(id);
+                TempData["SuccessMessage"] = "Đã xóa thành công:";
                 return RedirectToAction(nameof(Index));
             }
             catch

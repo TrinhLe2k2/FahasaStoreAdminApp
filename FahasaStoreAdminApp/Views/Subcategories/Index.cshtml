@@ -8,6 +8,7 @@
     ViewData["UrlCurrent"] = "/Subcategories/Index";
     var categories = ViewData["Categories"] as List<Category>;
 }
+<partial name="_ToastrMessage" />
 <div class="d-flex justify-content-between">
     <a href="/Subcategories/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
         Create New

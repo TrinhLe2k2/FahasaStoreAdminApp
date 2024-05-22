@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookStoreAPI.Services;
 using FahasaStoreAdminApp.Models;
 using FahasaStoreAdminApp.Services;
 using FahasaStoreAPI.Entities;
@@ -11,10 +12,12 @@ namespace FahasaStoreAdminApp.Controllers
     {
         private readonly IMenuService _MenuService;
         private readonly IMapper _mapper;
-        public MenusController(IMenuService MenuService, IMapper mapper)
+        private readonly IImageUploader _imageUploader;
+        public MenusController(IMenuService MenuService, IMapper mapper, IImageUploader imageUploader)
         {
             _MenuService = MenuService;
             _mapper = mapper;
+            _imageUploader = imageUploader;
         }
 
         // GET: MenuController
@@ -45,15 +48,16 @@ namespace FahasaStoreAdminApp.Controllers
         // POST: MenuController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Menu Menu)
+        public async Task<ActionResult> Create(Menu Menu, IFormFile fileImage)
         {
             try
             {
-                if (Menu.ImageUrl == null)
-                {
-                    Menu.ImageUrl = "https://voduongngochoa.com/uploads/noimg.jpg";
-                }
+                var resImgUploader = await _imageUploader.UploadImageAsync(fileImage, "Menu");
+                Menu.PublicId = resImgUploader.PublicId;
+                Menu.ImageUrl = resImgUploader.Url;
+
                 var res = await _MenuService.AddMenuAsync(Menu);
+                TempData["SuccessMessage"] = "Thêm mới thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -71,12 +75,26 @@ namespace FahasaStoreAdminApp.Controllers
         // POST: MenuController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, Menu Menu)
+        public async Task<ActionResult> Edit(int id, Menu Menu, IFormFile fileImage)
         {
             try
             {
+                var menuEdit = await _MenuService.GetMenuByIdAsync(id);
+                if (fileImage == null)
+                {
+                    Menu.PublicId = menuEdit.PublicId;
+                    Menu.ImageUrl = menuEdit.ImageUrl;
+                }
+                else
+                {
+                    var deleteImg = await _imageUploader.RemoveImageAsync(menuEdit.PublicId);
+                    var resImageUploader = await _imageUploader.UploadImageAsync(fileImage, "Menu");
+                    Menu.PublicId = resImageUploader.PublicId;
+                    Menu.ImageUrl = resImageUploader.Url;
+                }
                 Menu.MenuId = id;
                 var res = await _MenuService.UpdateMenuAsync(id, Menu);
+                TempData["SuccessMessage"] = "Chỉnh sửa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -98,7 +116,10 @@ namespace FahasaStoreAdminApp.Controllers
         {
             try
             {
-                var MenuDelete = await _MenuService.DeleteMenuAsync(id);
+                var menuDelete = await _MenuService.GetMenuByIdAsync(id);
+                var deleteImg = await _imageUploader.RemoveImageAsync(menuDelete.PublicId);
+                var Delete = await _MenuService.DeleteMenuAsync(id);
+                TempData["SuccessMessage"] = "Xóa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch

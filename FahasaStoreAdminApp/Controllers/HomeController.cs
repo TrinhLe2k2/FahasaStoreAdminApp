@@ -1,4 +1,4 @@
-using FahasaStoreAdminApp.Models;
+﻿using FahasaStoreAdminApp.Models;
 using FahasaStoreAdminApp.Services;
 using FahasaStoreAPI.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +42,7 @@ namespace FahasaStoreAdminApp.Controllers
             {
                 Website.WebsiteId = 1;
                 var res = await _homeService.UpdateWebsite(Website);
+                TempData["SuccessMessage"] = "Chỉnh sửa thành công";
                 return View();
             }
             catch

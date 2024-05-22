@@ -1,6 +1,6 @@
 ﻿
 
-<div>
+@* <div>
     <input type="file" name="fileImage" hidden class="form-control" id="file_@idInputFile" />
     <label for="file_@idInputFile" role="button" class="rounded-3 ">
         <div id="imagePreview_@idInputFile" class="position-relative overflow-hidden rounded-3 imagePreview ">
@@ -8,7 +8,14 @@
             <div class="overlay rounded-3"><i class="bi bi-camera"></i></div>
         </div>
     </label>
-</div>
+</div> *@
+
+<label for="@idInputFile" role="button" class="rounded-3 ">
+    <div id="imagePreview_@idInputFile" class="position-relative overflow-hidden rounded-3 imagePreview ">
+        <img src="" width="120" height="120" class="object-fit-contain rounded-3" />
+        <div class="overlay rounded-3"><i class="bi bi-camera"></i></div>
+    </div>
+</label>
 
 <script src="/lib/jquery/dist/jquery.min.js"></script>
 <script>
@@ -16,15 +23,13 @@
         var src = $('#@idInputFile').attr('value');
         $('#imagePreview_@idInputFile img').attr('src', src);
 
-        $('#file_@idInputFile').change(function (event) {
+        $('#@idInputFile').change(function (event) {
             var input = event.target;
             var reader = new FileReader();
             reader.onload = function () {
                 var dataURL = reader.result;
                 $('#imagePreview_@idInputFile img').attr('src', dataURL);
-                $('#@idInputFile').attr('value', dataURL);
             };
-
             reader.readAsDataURL(input.files[0]);
         });
     });

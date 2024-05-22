@@ -75,11 +75,12 @@ namespace FahasaStoreAdminApp.Controllers
             {
                 var res = await _bookService.AddBookAsync(book);
                 TempData["ActiveID"] = res;
+                TempData["SuccessMessage"] = "Thêm mới thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return PartialView();
             }
         }
 
@@ -110,6 +111,7 @@ namespace FahasaStoreAdminApp.Controllers
                 book.BookId = id;
                 var res = await _bookService.UpdateBookAsync(id, book);
                 TempData["ActiveID"] = res;
+                TempData["SuccessMessage"] = "Cập nhật thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -132,12 +134,19 @@ namespace FahasaStoreAdminApp.Controllers
             try
             {
                 var bookDelete = await _bookService.DeleteBookAsync(id);
+                TempData["SuccessMessage"] = "Xóa thành công";
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
             }
+        }
+
+        public async Task<ActionResult> GetPosterImages(int id)
+        {
+            ViewData["BookID"] = id;
+            return PartialView(await _bookService.GetPosterImagesAsync(id));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

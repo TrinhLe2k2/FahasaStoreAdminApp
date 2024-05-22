@@ -1,4 +1,5 @@
 using AutoMapper;
+using BookStoreAPI.Services;
 using FahasaStoreAdminApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,10 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
+
+builder.Services.AddScoped<IImageUploader, ImageUploader>();
+
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<IBannerService, BannerService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
-builder.Services.AddScoped<ISocialMediaLinkService, SocialMediaLinkService>();
+builder.Services.AddScoped<IPlatformService, PlatformService>();
 
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
