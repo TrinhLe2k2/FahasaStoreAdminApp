@@ -1,0 +1,22 @@
+﻿@model FahasaStoreAdminApp.Models.ErrorViewModel
+@{
+    ViewData["Title"] = @Model.ErrorCode;
+}
+
+<div id="content-wrapper" class="d-flex flex-column">
+
+    <!-- Main Content -->
+    <div id="content">
+        <div class="container-fluid">
+
+            <!-- 404 Error Text -->
+            <div class="text-center">
+                <div class="error mx-auto" data-text="@Model.ErrorCode">@Model.ErrorCode</div>
+                <h3 class="text-danger">@Model.ErrorMessage</h3>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+</div>

@@ -18,31 +18,6 @@ namespace FahasaStoreAdminApp.Controllers
             _imageUploader = imageUploader;
         }
 
-        // GET: PosterImageController
-        public async Task<ActionResult> Index()
-        {
-            try
-            {
-                return View(await _posterImageService.GetPosterImagesAsync());
-            }
-            catch
-            {
-                return RedirectToAction("Error");
-            }
-        }
-
-        // GET: PosterImageController/Details/5
-        public async Task<ActionResult> Details(int id)
-        {
-            return PartialView(await _posterImageService.GetPosterImageByIdAsync(id));
-        }
-
-        // GET: PosterImageController/Create
-        public ActionResult Create(int id)
-        {
-            return PartialView();
-        }
-
         // POST: PosterImageController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -65,13 +40,7 @@ namespace FahasaStoreAdminApp.Controllers
             }
         }
 
-        // GET: PosterImageController/Edit/5
-        public async Task<ActionResult> Edit(int id)
-        {
-            return PartialView(await _posterImageService.GetPosterImageByIdAsync(id));
-        }
-
-        // POST: PosterImageController/Edit/5
+        // POST: PosterImageController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, PosterImage PosterImage)
@@ -91,17 +60,10 @@ namespace FahasaStoreAdminApp.Controllers
         // GET: PosterImageController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            ViewData["PosterImage"] = await _posterImageService.GetPosterImageByIdAsync(id);
-            return PartialView();
-        }
-
-        // POST: PosterImageController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id, IFormCollection collection)
-        {
             try
             {
+                var poster = await _posterImageService.GetPosterImageByIdAsync(id);
+                var deleteImg = await _imageUploader.RemoveImageAsync(poster.PublicId);
                 var PosterImageDelete = await _posterImageService.DeletePosterImageAsync(id);
                 return Json(new { status = "success" });
             }
@@ -109,12 +71,6 @@ namespace FahasaStoreAdminApp.Controllers
             {
                 return View();
             }
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

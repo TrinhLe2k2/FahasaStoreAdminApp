@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookStoreAPI.Services;
+using FahasaStoreAdminApp.Filters;
 using FahasaStoreAdminApp.Models;
 using FahasaStoreAdminApp.Services;
 using FahasaStoreAPI.Entities;
@@ -21,16 +22,10 @@ namespace FahasaStoreAdminApp.Controllers
         }
 
         // GET: MenuController
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
-            try
-            {
-                return View(await _MenuService.GetMenusAsync());
-            }
-            catch
-            {
-                return RedirectToAction("Error");
-            }
+            var menus = await _MenuService.GetMenusAsync();
+            return View(menus);
         }
 
         // GET: MenuController/Details/5

@@ -5,6 +5,7 @@ using FahasaStoreAPI.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FahasaStoreAdminApp.Controllers
 {
@@ -30,11 +31,30 @@ namespace FahasaStoreAdminApp.Controllers
         }
 
         // GET: BookController
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page)
         {
             try
             {
-                return View(await _bookService.GetBooksAsync());
+                if (page < 0) page = 1;
+                var data = await _bookService.GetBooksPagination(page, 1);
+
+                if (page > data.PageCount)
+                {
+                    data = await _bookService.GetBooksPagination(data.PageCount, 1);
+                }
+
+                // Calculate pagination details
+                int pageNumber = data.PageNumber;
+                int pageCount = data.PageCount;
+
+                int startPage = Math.Max(1, pageNumber - 3);
+                int endPage = Math.Min(pageCount, pageNumber + 3);
+
+                data.StartPage = startPage;
+                data.EndPage = endPage;
+
+                ViewData["PageData"] = data;
+                return View(data.books);
             }
             catch
             {

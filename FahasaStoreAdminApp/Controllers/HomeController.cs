@@ -1,8 +1,12 @@
-﻿using FahasaStoreAdminApp.Models;
+﻿using FahasaStoreAdminApp.Filters;
+using FahasaStoreAdminApp.Helpers;
+using FahasaStoreAdminApp.Models;
 using FahasaStoreAdminApp.Services;
 using FahasaStoreAPI.Entities;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace FahasaStoreAdminApp.Controllers
 {
@@ -10,13 +14,16 @@ namespace FahasaStoreAdminApp.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IHomeService _homeService;
+        private readonly IJwtTokenDecoder _jwtTokenDecoder;
 
-        public HomeController(ILogger<HomeController> logger, IHomeService homeService)
+        public HomeController(ILogger<HomeController> logger, IHomeService homeService, IJwtTokenDecoder jwtTokenDecoder)
         {
             _logger = logger;
             _homeService = homeService;
+            _jwtTokenDecoder = jwtTokenDecoder;
         }
 
+        //[Authorize(AppRole.Customer, AppRole.Admin, AppRole.Staff )]
         public ActionResult Index()
         {
             return View();

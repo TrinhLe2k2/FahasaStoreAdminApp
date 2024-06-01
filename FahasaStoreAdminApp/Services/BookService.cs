@@ -1,4 +1,5 @@
-﻿using FahasaStoreAPI.Entities;
+﻿using FahasaStoreAdminApp.Models.ViewModel;
+using FahasaStoreAPI.Entities;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -9,6 +10,7 @@ namespace FahasaStoreAdminApp.Services
         Task<ICollection<Book>> GetBooksAsync();
         Task<Book> GetBookByIdAsync(int id);
         Task<ICollection<PosterImage>> GetPosterImagesAsync(int id);
+        Task<PaginatedBooksVM> GetBooksPagination(int? page, int? size);
         Task<int> AddBookAsync(Book book);
         Task<int> UpdateBookAsync(int id, Book book);
         Task<bool> DeleteBookAsync(int id);
@@ -164,6 +166,32 @@ namespace FahasaStoreAdminApp.Services
             }
             catch (JsonException ex)
             {
+                throw new Exception("Error occurred while parsing JSON response.", ex);
+            }
+        }
+
+        public async Task<PaginatedBooksVM> GetBooksPagination(int? page, int? size)
+        {
+            try
+            {
+                if(page < 0) page = 1;
+                using (var httpClient = _httpClientFactory.CreateClient())
+                {
+                    var response = await httpClient.GetAsync("https://localhost:7069/api/Books/GetBooksPagination?page=" + page + "&size=" + size);
+                    response.EnsureSuccessStatusCode();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<PaginatedBooksVM>(content);
+                    return data ?? new PaginatedBooksVM();
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                // Xử lý exception, có thể ghi log hoặc thực hiện các hành động phù hợp khác
+                throw new Exception("Error occurred while fetching books from API.", ex);
+            }
+            catch (JsonException ex)
+            {
+                // Xử lý exception phân tích cú pháp JSON
                 throw new Exception("Error occurred while parsing JSON response.", ex);
             }
         }

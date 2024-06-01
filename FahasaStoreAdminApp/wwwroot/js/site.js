@@ -1,9 +1,10 @@
 ﻿
 $(function () {
-    Start();
+    AcctiveSidebar();
+    GetUserLogin();
 });
 
-const Start = () => {
+const AcctiveSidebar = () => {
     var active = $('#accordionSidebar').attr("active");
     var listNavItem = $('#accordionSidebar li.nav-item');
     listNavItem.map((index, item) => {
@@ -40,3 +41,16 @@ const HandlerCRUD = (e, event) => {
     });
 }
 
+const GetUserLogin = () => {
+    $.ajax({
+        url: `/Account/UserLogin`,
+        type: 'GET',
+        success: function (data) {
+            $('#userDropdown span').html(data.fullName);
+            $('#userDropdown img').attr('src', data.imageUrl);
+        },
+        error: function() {
+            console.log("Error: user login");
+        }
+    });
+}

@@ -1,6 +1,7 @@
 ﻿@using FahasaStoreAdminApp.Components
 @model IEnumerable<FahasaStoreAPI.Entities.PosterImage>
 
+    @Html.AntiForgeryToken()
 <div id="poster-images" class="row row-cols-3 g-3">
     <div>
         <form id="posterImageForm" enctype="multipart/form-data" hidden>
@@ -19,7 +20,7 @@
         <div class="image-container">
             <img src="@item.ImageUrl" width="120" height="120" class="object-fit-contain image">
             <div class="overlay">
-                <a href="/PosterImages/Delete" IdValue="@item.PosterImageId" onclick="HandlerCRUD(this, event)" class="icon"><i class="bi bi-trash3"></i></a>
+                <a href="/PosterImages/Delete" IdValue="@item.PosterImageId" class="icon"><i class="bi bi-trash3"></i></a>
             </div>
         </div>
     }
@@ -31,9 +32,6 @@
         $('#fileImage').on('change', function (event) {
             $('#posterImageForm').submit();
         });
-    });
-
-    $(document).ready(function () {
 
         function GetPosterImages() {
             var element = $("#listPosterImages");
@@ -53,6 +51,30 @@
             });
         }
 
+        $('.icon').click(function (event) {
+            event.preventDefault();
+            var confirmDelete = confirm("Bạn có chắc muốn xóa ảnh không?");
+            if (confirmDelete) {
+                var id = $(this).attr("IdValue");
+                var token = $('input[name="__RequestVerificationToken"]').val(); // Lấy giá trị của token
+                $.ajax({
+                    url: '/PosterImages/Delete',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        __RequestVerificationToken: token // Gửi token
+                    },
+                    success: function (response) {
+                        GetPosterImages();
+                        toastr.success("Delete image successful!");
+                    },
+                    error: function () {
+                        alert("Delete image failed!");
+                    }
+                });
+            }
+        });
+
         $('#posterImageForm').submit(function (event) {
             event.preventDefault();
             var formData = new FormData(this);
@@ -63,19 +85,11 @@
                 contentType: false,
                 processData: false,
                 success: function (data) {
+                    toastr.success("Post image successful!");
                     GetPosterImages();
-                    // var htmlImg = `
-                    //         <div class="image-container">
-                    //             <img src="${data.imageUrl}" width="120" height="120" class="object-fit-contain image">
-                    //             <div class="overlay">
-                    //                 <a href="/PosterImages/Delete" IdValue="${data.imgId}" onclick="HandlerCRUD(this, event)" class="icon"><i class="bi bi-trash3"></i></a>
-                    //             </div>
-                    //         </div>
-                    // `
-                    // $("#poster-images").append(htmlImg);
                 },
                 error: function (xhr, status, error) {
-                    console.error("Error uploading image: " + error);
+                    alert("Post image failed!");
                 }
             });
         });
