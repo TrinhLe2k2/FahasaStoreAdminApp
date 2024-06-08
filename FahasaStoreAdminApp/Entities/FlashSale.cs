@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FahasaStoreAPI.Entities
+namespace FahasaStoreAdminApp.Entities
 {
     public partial class FlashSale
     {
@@ -10,9 +10,10 @@ namespace FahasaStoreAPI.Entities
             FlashSaleBooks = new HashSet<FlashSaleBook>();
         }
 
-        public int FlashSaleId { get; set; }
+        public int Id { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         public virtual ICollection<FlashSaleBook> FlashSaleBooks { get; set; }
     }

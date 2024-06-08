@@ -1,12 +1,9 @@
-﻿using FahasaStoreAdminApp.Filters;
-using FahasaStoreAdminApp.Helpers;
-using FahasaStoreAdminApp.Models;
+﻿using FahasaStoreAdminApp.Entities;
+using FahasaStoreAdminApp.Models.CustomModels;
+using FahasaStoreAdminApp.Models.EModels;
 using FahasaStoreAdminApp.Services;
-using FahasaStoreAPI.Entities;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Common;
 using System.Diagnostics;
-using System.Security.Claims;
 
 namespace FahasaStoreAdminApp.Controllers
 {
@@ -43,11 +40,11 @@ namespace FahasaStoreAdminApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Website(Website Website)
+        public async Task<ActionResult> Website(WebsiteModel Website)
         {
             try
             {
-                Website.WebsiteId = 1;
+                Website.Id = 1;
                 var res = await _homeService.UpdateWebsite(Website);
                 TempData["SuccessMessage"] = "Chỉnh sửa thành công";
                 return View();
@@ -61,20 +58,6 @@ namespace FahasaStoreAdminApp.Controllers
         public IActionResult Account()
         {
             return View();
-        }
-
-        public IActionResult ConfirmDelete(int id, string url, string name)
-        {
-            ViewData["Url"] = url;
-            ViewData["Name"] = name;
-            ViewData["Id"] = id;
-            return PartialView("/Views/Partial/_ConfirmDelete.cshtml");
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

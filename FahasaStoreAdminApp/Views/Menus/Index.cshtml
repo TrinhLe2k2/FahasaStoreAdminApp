@@ -1,5 +1,5 @@
 ﻿@using FahasaStoreAdminApp.Components
-@model IEnumerable<FahasaStoreAPI.Entities.Menu>
+@model IEnumerable<FahasaStoreAdminApp.Entities.Menu>
 
 @{
     ViewData["Title"] = "Quản Lý Menu";
@@ -18,7 +18,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MenuId)
+                @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -37,7 +37,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MenuId)
+                    @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
@@ -49,8 +49,8 @@
                     <img src="@item.ImageUrl" alt="Image" width="50" height="50" class="object-fit-contain" />
                 </td>
                 <td>
-                    <a href="/Menus/Edit" IdValue="@item.MenuId" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
-                    <a href="/Menus/Delete" IdValue="@item.MenuId" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
+                    <a href="/Menus/Edit" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
+                    <a href="/Menus/Delete" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
                 </td>
             </tr>
         }

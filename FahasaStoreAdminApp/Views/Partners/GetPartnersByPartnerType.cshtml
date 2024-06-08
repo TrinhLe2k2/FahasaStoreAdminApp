@@ -1,0 +1,23 @@
+﻿@model IEnumerable<FahasaStoreAdminApp.Entities.Partner>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+        <td>
+            @item.PartnerType?.Name
+        </td>
+        <td>
+            <a href="/Partners/Details" IdValue="@item.Id" onclick="HandlerCRUD(this, event)">@item.Name</a>
+        </td>
+        <td>
+            <img src="@item.ImageUrl" alt="Image" width="50" height="50" class="object-fit-contain" />
+        </td>
+        <td>
+            <a href="/Partners/Edit" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
+            <a href="/Partners/Delete" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
+        </td>
+    </tr>
+}

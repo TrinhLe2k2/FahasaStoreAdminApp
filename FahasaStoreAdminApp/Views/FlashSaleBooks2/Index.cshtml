@@ -1,0 +1,104 @@
+﻿@using FahasaStoreAdminApp.Entities
+@model IEnumerable<FlashSaleBook>
+
+@{
+    ViewData["Title"] = "Quản lý sách trong flash sale";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["ActiveSidebar"] = 4;
+    ViewData["UrlCurrent"] = "/FlashSaleBooks/Index";
+    var FlashSales = ViewData["FlashSales"] as List<FlashSale>;
+}
+<partial name="_ToastrMessage" />
+<div class="d-flex justify-content-between">
+    <a href="/FlashSaleBooks/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
+        Create New
+    </a>
+    <div>
+        @{
+            if (FlashSales != null && FlashSales.Count > 0)
+            {
+                <select id="select-flashSale" class="form-select">
+                    <option value="0" selected>--Tất cả lựa chọn--</option>
+                    @foreach (var item in FlashSales)
+                    {
+                        <option value="@item.Id">@item.StartDate - @item.EndDate</option>
+                    }
+                </select>
+                @section Scripts {
+                <script>
+                    $(document).ready(function () {
+                        $('#select-flashSale').change(function () {
+                            var flashSaleId = $(this).val();
+                            // Chỉ thực hiện AJAX nếu một tùy chọn khác "Tất cả thể loại" được chọn
+                            if (flashSaleId) {
+                                $.ajax({
+                                    url: '/Subcategories/GetFlashSaleBooksByFlashSale/' + flashSaleId,
+                                    type: 'GET',
+                                    success: function (data) {
+                                        $('tbody').html(data);
+                                    },
+                                    error: function (xhr, status, error) {
+                                        alert('AJAX Error: ' + status + error)
+                                        console.error('AJAX Error: ' + status + error);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                </script>
+                }
+            }
+        }
+    </div>
+</div>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlashSale)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DiscountPercentage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @item.FlashSale.StartDate - @item.FlashSale.EndDate
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Book.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DiscountPercentage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    <a href="/FlashSaleBooks/Edit" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
+                    <a href="/FlashSaleBooks/Delete" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

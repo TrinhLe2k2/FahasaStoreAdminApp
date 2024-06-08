@@ -1,9 +1,5 @@
-﻿using FahasaStoreAdminApp.Models;
-using FahasaStoreAdminApp.Models.DTOModel;
-using FahasaStoreAPI.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using FahasaStoreAdminApp.Models.CustomModels;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 

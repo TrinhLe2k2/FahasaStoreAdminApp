@@ -1,5 +1,4 @@
-﻿@using FahasaStoreAPI.Entities
-@using FahasaStoreAdminApp.Models.DTOModel
+﻿
 @{
     var title = ViewData["Title"];
     Layout = null;
@@ -81,6 +80,18 @@
                     <span class="text-capitalize">Tài Khoản</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Home/Account">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span class="text-capitalize">Quản Lý Người Dùng</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Home/Account">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span class="text-capitalize">Quản Lý Thông báo</span>
+                </a>
+            </li>
             <li>
                 <!-- Divider -->
                 <hr class="sidebar-divider">
@@ -100,9 +111,24 @@
                 <div id="collapseWebsite" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Quản Lý website:</h6>
-                        <a class="collapse-item text-capitalize" href="/Menus/Index">Quản lý menu</a>
-                        <a class="collapse-item text-capitalize" href="/Banners/Index">Quản lý banner</a>
-                        <a class="collapse-item text-capitalize" href="/Platform/Index">Quản lý mạng xã hội</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Menus/Index">Quản lý menu</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Banners/Index">Quản lý banner</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Platforms/Index">Quản lý mạng xã hội</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePromotion"
+                   aria-expanded="true" aria-controls="collapsePromotion">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span class="text-capitalize">Khuyến Mãi</span>
+                </a>
+                <div id="collapsePromotion" class="collapse" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Quản Lý Khuyến mãi:</h6>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Vouchers/Index">Quản lý voucher</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/FlashSales/Index">Quản lý flash sale</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/FlashSaleBooks/Index">Sách đang flash sale</a>
                     </div>
                 </div>
             </li>
@@ -115,18 +141,35 @@
                 <div id="collapseProduct" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Quản Lý sản phẩm:</h6>
-                        <a class="collapse-item text-capitalize" href="/Books/Index">Quản lý sách</a>
-                        <a class="collapse-item text-capitalize" href="/Authors/Index">Quản lý tác giả</a>
-                        <a class="collapse-item text-capitalize" href="/Categories/Index">Quản lý thể loại</a>
-                        <a class="collapse-item text-capitalize" href="/Subcategories/Index">Quản lý thể loại phụ</a>
-                        <a class="collapse-item text-capitalize" href="/Partners/Index">Quản lý đối tác</a>
-                        <a class="collapse-item text-capitalize" href="/PartnerTypes/Index">Quản lý kiểu đối tác</a>
-                        <a class="collapse-item text-capitalize" href="/CoverTypes/Index">Quản lý kiểu bìa sách</a>
-                        <a class="collapse-item text-capitalize" href="/Dimensions/Index">Quản lý kích thước sách</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Books/Index">Quản lý sách</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Authors/Index">Quản lý tác giả</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Categories/Index">Quản lý thể loại</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Subcategories/Index">Quản lý thể loại phụ</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Partners/Index">Quản lý đối tác</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/PartnerTypes/Index">Quản lý kiểu đối tác</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/CoverTypes/Index">Quản lý kiểu bìa sách</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Dimensions/Index">Quản lý kích thước sách</a>
                     </div>
                 </div>
             </li>
             
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrder"
+                   aria-expanded="true" aria-controls="collapseOrder">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span class="text-capitalize">Đơn Hàng</span>
+                </a>
+                <div id="collapseOrder" class="collapse" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Quản Lý Đơn Hàng:</h6>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Books/Index">Quản lý đơn hàng</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Authors/Index">Quản lý Trạng Thái đơn hàng</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Categories/Index">Quản lý Phương thức thanh toán</a>
+                        <a class="collapse-item text-capitalize text-wrap text-break" href="/Subcategories/Index">Quản lý mã giảm giá</a>
+                    </div>
+                </div>
+            </li>
+
             <li>
                 <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">

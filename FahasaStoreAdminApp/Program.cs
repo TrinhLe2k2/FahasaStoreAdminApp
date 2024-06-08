@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BookStoreAPI.Services;
+using FahasaStoreAdminApp.Helpers;
 using FahasaStoreAdminApp.Services;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,26 +18,13 @@ builder.Services.AddSession(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
+// Đăng ký các dịch vụ vào container.
 builder.Services.AddScoped<IImageUploader, ImageUploader>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IJwtTokenDecoder, JwtTokenDecoder>();
 
 builder.Services.AddScoped<IHomeService, HomeService>();
-builder.Services.AddScoped<IBannerService, BannerService>();
-builder.Services.AddScoped<IMenuService, MenuService>();
-builder.Services.AddScoped<IPlatformService, PlatformService>();
-
-builder.Services.AddScoped<IBookService, BookService>();
-builder.Services.AddScoped<IAuthorService, AuthorService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
-builder.Services.AddScoped<IPartnerTypeService, PartnerTypeService>();
-builder.Services.AddScoped<IPartnerService, PartnerService>();
-builder.Services.AddScoped<ICoverTypeService, CoverTypeService>();
-builder.Services.AddScoped<IDimensionService, DimensionService>();
-builder.Services.AddScoped<IPosterImageService, PosterImageService>();
-builder.Services.AddScoped<IUserService, UserService>();
-
+builder.Services.AddScopedServicesFromAssembly(Assembly.GetExecutingAssembly(), "FahasaStoreAdminApp.Services.EntityService");
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();

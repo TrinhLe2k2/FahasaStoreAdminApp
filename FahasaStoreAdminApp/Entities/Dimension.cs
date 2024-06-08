@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FahasaStoreAPI.Entities
+namespace FahasaStoreAdminApp.Entities
 {
     public partial class Dimension
     {
@@ -10,11 +10,12 @@ namespace FahasaStoreAPI.Entities
             Books = new HashSet<Book>();
         }
 
-        public int DimensionId { get; set; }
+        public int Id { get; set; }
         public double Length { get; set; }
         public double Width { get; set; }
         public double Height { get; set; }
         public string Unit { get; set; } = null!;
+        public DateTime? CreatedAt { get; set; }
 
         public virtual ICollection<Book> Books { get; set; }
     }

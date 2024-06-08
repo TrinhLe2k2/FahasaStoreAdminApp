@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FahasaStoreAPI.Entities
+namespace FahasaStoreAdminApp.Entities
 {
     public partial class CoverType
     {
@@ -10,8 +10,9 @@ namespace FahasaStoreAPI.Entities
             Books = new HashSet<Book>();
         }
 
-        public int CoverTypeId { get; set; }
+        public int Id { get; set; }
         public string TypeName { get; set; } = null!;
+        public DateTime? CreatedAt { get; set; }
 
         public virtual ICollection<Book> Books { get; set; }
     }

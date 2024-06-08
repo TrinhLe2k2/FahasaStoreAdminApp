@@ -1,4 +1,5 @@
-﻿using FahasaStoreAPI.Entities;
+﻿using FahasaStoreAdminApp.Entities;
+using FahasaStoreAdminApp.Models.EModels;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -6,7 +7,7 @@ namespace FahasaStoreAdminApp.Services
 {
     public interface IHomeService
     {
-        Task<int> UpdateWebsite(Website Website);
+        Task<int> UpdateWebsite(WebsiteModel Website);
         Task<Website> GetWebsiteByIdAsync();
     }
     public class HomeService : IHomeService
@@ -40,7 +41,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> UpdateWebsite(Website Website)
+        public async Task<int> UpdateWebsite(WebsiteModel Website)
         {
             try
             {

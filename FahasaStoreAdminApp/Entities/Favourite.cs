@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FahasaStoreAPI.Entities
+namespace FahasaStoreAdminApp.Entities
 {
     public partial class Favourite
     {
-        public int FavouriteId { get; set; }
-        public string? UserId { get; set; }
-        public int? BookId { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public int Id { get; set; }
+        public string UserId { get; set; } = null!;
+        public int BookId { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
-        public virtual Book? Book { get; set; }
-        public virtual AspNetUser? User { get; set; }
+        public virtual Book Book { get; set; } = null!;
+        public virtual AspNetUser User { get; set; } = null!;
     }
 }

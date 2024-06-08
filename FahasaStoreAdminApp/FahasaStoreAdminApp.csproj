@@ -7,7 +7,94 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Orders\**" />
+    <Compile Remove="Views\Users\**" />
+    <Content Remove="Views\Orders\**" />
+    <Content Remove="Views\Users\**" />
+    <EmbeddedResource Remove="Views\Orders\**" />
+    <EmbeddedResource Remove="Views\Users\**" />
+    <None Remove="Views\Orders\**" />
+    <None Remove="Views\Users\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\Books3Controller.cs" />
+    <Compile Remove="Controllers\OrdersController.cs" />
+    <Compile Remove="Controllers\UsersController.cs" />
+    <Compile Remove="EntityWithImage.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\FlashSaleBooks2\Create.cshtml" />
+    <Content Remove="Views\FlashSaleBooks2\Delete.cshtml" />
+    <Content Remove="Views\FlashSaleBooks2\Edit.cshtml" />
+    <Content Remove="Views\FlashSaleBooks2\GetFlashSaleBooksByFlashSale.cshtml" />
+    <Content Remove="Views\FlashSaleBooks2\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Components\ImageInputComponent.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Banners\Create.cshtml" />
+    <None Include="Views\Banners\Delete.cshtml" />
+    <None Include="Views\Banners\Edit.cshtml" />
+    <None Include="Views\Banners\Index.cshtml" />
+    <None Include="Views\Books\Create.cshtml" />
+    <None Include="Views\Books\Delete.cshtml" />
+    <None Include="Views\Books\Details.cshtml" />
+    <None Include="Views\Books\Edit.cshtml" />
+    <None Include="Views\Books\GetPosterImages.cshtml" />
+    <None Include="Views\Books\Index.cshtml" />
+    <None Include="Views\Categories\Create.cshtml" />
+    <None Include="Views\Categories\Delete.cshtml" />
+    <None Include="Views\Categories\Edit.cshtml" />
+    <None Include="Views\Categories\Index.cshtml" />
+    <None Include="Views\CoverTypes\Create.cshtml" />
+    <None Include="Views\CoverTypes\Delete.cshtml" />
+    <None Include="Views\CoverTypes\Edit.cshtml" />
+    <None Include="Views\CoverTypes\Index.cshtml" />
+    <None Include="Views\Dimensions\Create.cshtml" />
+    <None Include="Views\Dimensions\Delete.cshtml" />
+    <None Include="Views\Dimensions\Edit.cshtml" />
+    <None Include="Views\Dimensions\Index.cshtml" />
+    <None Include="Views\Error\AccessDenied.cshtml" />
+    <None Include="Views\Home\Account.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Website.cshtml" />
+    <None Include="Views\Menus\Create.cshtml" />
+    <None Include="Views\Menus\Delete.cshtml" />
+    <None Include="Views\Menus\Edit.cshtml" />
+    <None Include="Views\Menus\Index.cshtml" />
+    <None Include="Views\Partners\Create.cshtml" />
+    <None Include="Views\Partners\Delete.cshtml" />
+    <None Include="Views\Partners\Details.cshtml" />
+    <None Include="Views\Partners\Edit.cshtml" />
+    <None Include="Views\Partners\GetPartnersByPartnerType.cshtml" />
+    <None Include="Views\Partners\Index.cshtml" />
+    <None Include="Views\PartnerTypes\Create.cshtml" />
+    <None Include="Views\PartnerTypes\Delete.cshtml" />
+    <None Include="Views\PartnerTypes\Edit.cshtml" />
+    <None Include="Views\PartnerTypes\Index.cshtml" />
+    <None Include="Views\Platforms\Create.cshtml" />
+    <None Include="Views\Platforms\Delete.cshtml" />
+    <None Include="Views\Platforms\Edit.cshtml" />
+    <None Include="Views\Platforms\Index.cshtml" />
+    <None Include="Views\Shared\Error.cshtml" />
+    <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Views\Shared\_ToastrMessage.cshtml" />
+    <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Views\FlashSaleBooks2\Create.cshtml" />
+    <None Include="Views\FlashSaleBooks2\Delete.cshtml" />
+    <None Include="Views\FlashSaleBooks2\Edit.cshtml" />
+    <None Include="Views\FlashSaleBooks2\GetFlashSaleBooksByFlashSale.cshtml" />
+    <None Include="Views\FlashSaleBooks2\Index.cshtml" />
+    <None Include="Views\Subcategories\Create.cshtml" />
+    <None Include="Views\Subcategories\Delete.cshtml" />
+    <None Include="Views\Subcategories\Edit.cshtml" />
+    <None Include="Views\Subcategories\GetSubcategoriesByCategory.cshtml" />
+    <None Include="Views\Subcategories\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

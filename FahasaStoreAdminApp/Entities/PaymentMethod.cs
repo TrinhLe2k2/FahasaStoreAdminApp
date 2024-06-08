@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FahasaStoreAPI.Entities
+namespace FahasaStoreAdminApp.Entities
 {
     public partial class PaymentMethod
     {
@@ -10,11 +10,12 @@ namespace FahasaStoreAPI.Entities
             Orders = new HashSet<Order>();
         }
 
-        public int PaymentMethodId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string? PublicId { get; set; }
-        public string ImageUrl { get; set; } = null!;
+        public string? ImageUrl { get; set; }
         public bool Active { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
     }

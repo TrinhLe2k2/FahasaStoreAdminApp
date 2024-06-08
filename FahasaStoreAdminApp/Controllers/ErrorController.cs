@@ -1,6 +1,7 @@
 ﻿using FahasaStoreAdminApp.Filters;
 using FahasaStoreAdminApp.Helpers;
 using FahasaStoreAdminApp.Models;
+using FahasaStoreAdminApp.Models.CustomModels;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -9,7 +10,7 @@ namespace FahasaStoreAdminApp.Controllers
 {
     public class ErrorController : Controller
     {
-        [Authorize(AppRole.Customer, AppRole.Admin, AppRole.Staff)]
+        //[Authorize(AppRole.Customer, AppRole.Admin, AppRole.Staff)]
         [Route("Error/{statusCode}")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(int statusCode)

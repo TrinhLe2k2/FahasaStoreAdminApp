@@ -1,0 +1,53 @@
+﻿@model IEnumerable<FahasaStoreAdminApp.Entities.Platform>
+
+@{
+    ViewData["Title"] = "Quản lý liên kết mạng xã hội";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["ActiveSidebar"] = 3;
+    ViewData["UrlCurrent"] = "/Platform/Index";
+}
+<partial name="_ToastrMessage" />
+<a href="/Platforms/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
+    Create New
+</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlatformName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Link)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlatformName)
+            </td>
+            <td>
+                <img src="@item.ImageUrl" alt="Image" width="50" height="50" class="object-fit-contain" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Link)
+            </td>
+            <td>
+                    <a href="/Platforms/Edit" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
+                    <a href="/Platforms/Delete" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

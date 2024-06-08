@@ -1,10 +1,12 @@
-﻿using BookStoreAPI.Services;
-using FahasaStoreAdminApp.Models;
-using FahasaStoreAdminApp.Services;
-using FahasaStoreAPI.Entities;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using BookStoreAPI.Services;
+using FahasaStoreAdminApp.Entities;
+using FahasaStoreAdminApp.Helpers;
+using FahasaStoreAdminApp.Models.EModels;
+using FahasaStoreAdminApp.Services.EntityService;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FahasaStoreAdminApp.Controllers
 {
@@ -26,30 +28,13 @@ namespace FahasaStoreAdminApp.Controllers
             try
             {
                 var resImageUploader = await _imageUploader.UploadImageAsync(fileImage, "BookPoster");
-                var PosterImage = new PosterImage();
+                var PosterImage = new PosterImageModel();
                 PosterImage.BookId = id;
                 PosterImage.PublicId = resImageUploader.PublicId;
                 PosterImage.ImageUrl = resImageUploader.Url;
 
-                var res = await _posterImageService.AddPosterImageAsync(PosterImage);
+                var res = await _posterImageService.AddAsync(PosterImage);
                 return Json(new { imageUrl = PosterImage.ImageUrl, imgId = res });
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // POST: PosterImageController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, PosterImage PosterImage)
-        {
-            try
-            {
-                PosterImage.PosterImageId = id;
-                var res = await _posterImageService.UpdatePosterImageAsync(id, PosterImage);
-                return RedirectToAction(nameof(Index));
             }
             catch
             {
@@ -62,9 +47,9 @@ namespace FahasaStoreAdminApp.Controllers
         {
             try
             {
-                var poster = await _posterImageService.GetPosterImageByIdAsync(id);
+                var poster = await _posterImageService.GetByIdAsync(id);
                 var deleteImg = await _imageUploader.RemoveImageAsync(poster.PublicId);
-                var PosterImageDelete = await _posterImageService.DeletePosterImageAsync(id);
+                var PosterImageDelete = await _posterImageService.DeleteAsync(id);
                 return Json(new { status = "success" });
             }
             catch

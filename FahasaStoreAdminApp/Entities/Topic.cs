@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FahasaStoreAPI.Entities
+namespace FahasaStoreAdminApp.Entities
 {
     public partial class Topic
     {
@@ -10,8 +10,9 @@ namespace FahasaStoreAPI.Entities
             TopicContents = new HashSet<TopicContent>();
         }
 
-        public int TopicId { get; set; }
+        public int Id { get; set; }
         public string TopicName { get; set; } = null!;
+        public DateTime? CreatedAt { get; set; }
 
         public virtual ICollection<TopicContent> TopicContents { get; set; }
     }

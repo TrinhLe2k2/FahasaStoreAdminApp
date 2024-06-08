@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FahasaStoreAPI.Entities
+namespace FahasaStoreAdminApp.Entities
 {
     public partial class Status
     {
@@ -10,8 +10,9 @@ namespace FahasaStoreAPI.Entities
             OrderStatuses = new HashSet<OrderStatus>();
         }
 
-        public int StatusId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = null!;
+        public DateTime? CreatedAt { get; set; }
 
         public virtual ICollection<OrderStatus> OrderStatuses { get; set; }
     }

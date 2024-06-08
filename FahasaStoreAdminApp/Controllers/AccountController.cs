@@ -1,10 +1,7 @@
-﻿using FahasaStoreAdminApp.Filters;
-using FahasaStoreAdminApp.Helpers;
-using FahasaStoreAdminApp.Models;
+﻿using FahasaStoreAdminApp.Models.CustomModels;
 using FahasaStoreAdminApp.Services;
+using FahasaStoreAdminApp.Services.EntityService;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.Text.Json;
 
 namespace FahasaStoreAdminApp.Controllers
 {
@@ -38,12 +35,6 @@ namespace FahasaStoreAdminApp.Controllers
             {
                 var accessToken = await _accountService.LogInAsync(model);
                 var userClaims = _jwtTokenDecoder.DecodeToken(accessToken).Claims;
-                //var roles = userClaims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-                //var hasRole = roles.Any(role => role == AppRole.Customer);
-                //if (!hasRole)
-                //{
-                //    return RedirectToAction("Error", "Error", new { ErrorCode = 401 });
-                //}
                 var UserId = userClaims.FirstOrDefault(c => c.Type == "UserId")?.Value;
                 HttpContext.Session.SetString("JWToken", accessToken);
                 HttpContext.Session.SetString("UserId", UserId);
@@ -87,8 +78,12 @@ namespace FahasaStoreAdminApp.Controllers
         public async Task<IActionResult> UserLogin()
         {
             var userId = HttpContext.Session.GetString("UserId");
-            var user = await _userService.GetUserByIdAsync(userId);
-            return Json(user);
+            if (userId != null)
+            {
+                var user = await _userService.GetByIdAsync(userId);
+                return Json(user);
+            }
+            return RedirectToAction("Error", "Error");
         }
     }
 }

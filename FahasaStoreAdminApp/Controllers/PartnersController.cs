@@ -1,149 +1,45 @@
 ﻿using AutoMapper;
 using BookStoreAPI.Services;
-using FahasaStoreAdminApp.Models;
-using FahasaStoreAdminApp.Services;
-using FahasaStoreAPI.Entities;
-using Microsoft.AspNetCore.Mvc;
+using FahasaStoreAdminApp.Entities;
+using FahasaStoreAdminApp.Helpers;
+using FahasaStoreAdminApp.Models.EModels;
+using FahasaStoreAdminApp.Services.EntityService;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FahasaStoreAdminApp.Controllers
 {
-    public class PartnersController : Controller
+    public class PartnersController : GenericController<Partner, PartnerModel, int>
     {
+        private readonly IPartnerTypeService _partnerTypeService;
         private readonly IPartnerService _PartnerService;
-        private readonly IPartnerTypeService _PartnerTypeService;
-        private readonly IMapper _mapper;
-        private readonly IImageUploader _imageUploader;
-        public PartnersController(IPartnerService PartnerService, IMapper mapper, IPartnerTypeService PartnerTypeService, IImageUploader imageUploader)
+        public PartnersController(IPartnerTypeService partnerTypeService, IPartnerService PartnerService, IMapper mapper, IImageUploader imageUploader) : base(PartnerService, mapper, imageUploader)
         {
+            _partnerTypeService = partnerTypeService;
             _PartnerService = PartnerService;
-            _mapper = mapper;
-            _PartnerTypeService = PartnerTypeService;
-            _imageUploader = imageUploader;
         }
 
-        // GET: PartnerController
-        public async Task<ActionResult> Index()
+        public override async Task<IActionResult> Index()
         {
-            try
-            {
-                ViewData["PartnerTypes"] = await _PartnerTypeService.GetPartnerTypesAsync();
-                return View(await _PartnerService.GetPartnersAsync());
-            }
-            catch
-            {
-                return RedirectToAction("Error");
-            }
+            ViewData["PartnerTypes"] = await _partnerTypeService.GetAllAsync();
+            return await base.Index();
         }
 
-        // GET: PartnerController/Details/5
-        public async Task<ActionResult> Details(int id)
+        public override async Task<ActionResult> Create()
         {
-            return PartialView(await _PartnerService.GetPartnerByIdAsync(id));
-        }
-
-        // GET: PartnerController/Create
-        public async Task<ActionResult> Create()
-        {
-            ViewData["PartnerTypes"] = new SelectList(await _PartnerTypeService.GetPartnerTypesAsync(), "PartnerTypeId", "Name");
+            ViewData["PartnerTypes"] = new SelectList(await _partnerTypeService.GetAllAsync(), "Id", "Name");
             return PartialView();
         }
 
-        // POST: PartnerController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Partner Partner, IFormFile fileImage)
+        public override async Task<IActionResult> Edit(int id)
         {
-            try
-            {
-                var resImgUploader = await _imageUploader.UploadImageAsync(fileImage, "Partner");
-                Partner.PublicId = resImgUploader.PublicId;
-                Partner.ImageUrl = resImgUploader.Url;
-
-                var res = await _PartnerService.AddPartnerAsync(Partner);
-                TempData["SuccessMessage"] = "Thêm mới thành công";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                return RedirectToAction("Error");
-            }
+            ViewData["PartnerTypes"] = new SelectList(await _partnerTypeService.GetAllAsync(), "Id", "Name");
+            return await base.Edit(id);
         }
 
-        // GET: PartnerController/Edit/5
-        public async Task<ActionResult> Edit(int id)
+        public async Task<ActionResult> GetPartnersByPartnerType(string id)
         {
-            ViewData["PartnerTypes"] = new SelectList(await _PartnerTypeService.GetPartnerTypesAsync(), "PartnerTypeId", "Name");
-            return PartialView(await _PartnerService.GetPartnerByIdAsync(id));
-        }
-
-        // POST: PartnerController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, Partner Partner, IFormFile fileImage)
-        {
-            try
-            {
-                var PartnerEdit = await _PartnerService.GetPartnerByIdAsync(id);
-                if (fileImage == null)
-                {
-                    Partner.PublicId = PartnerEdit.PublicId;
-                    Partner.ImageUrl = PartnerEdit.ImageUrl;
-                }
-                else
-                {
-                    var deleteImg = await _imageUploader.RemoveImageAsync(PartnerEdit.PublicId);
-                    var resImageUploader = await _imageUploader.UploadImageAsync(fileImage, "Partner");
-                    Partner.PublicId = resImageUploader.PublicId;
-                    Partner.ImageUrl = resImageUploader.Url;
-                }
-                Partner.PartnerId = id;
-                var res = await _PartnerService.UpdatePartnerAsync(id, Partner);
-                TempData["SuccessMessage"] = "Chỉnh sửa thành công";
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: PartnerController/Delete/5
-        public async Task<ActionResult> Delete(int id)
-        {
-            return PartialView(await _PartnerService.GetPartnerByIdAsync(id));
-        }
-
-        // POST: PartnerController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                var PartnerDelete = await _PartnerService.DeletePartnerAsync(id);
-                TempData["SuccessMessage"] = "Xóa thành công";
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        public async Task<ActionResult> GetPartnersByType(int id)
-        {
-            return PartialView(await _PartnerService.GetPartnersByType(id));
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            var errorMessage = TempData["ErrorMessage"] as string;
-            ViewBag.ErrorMessage = errorMessage;
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return PartialView(await _PartnerService.GetListByAsync("PartnerTypeId", id));
         }
     }
 }

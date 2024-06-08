@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FahasaStoreAPI.Entities.Dimension>
+﻿@model IEnumerable<FahasaStoreAdminApp.Entities.Dimension>
 
 @{
     ViewData["Title"] = "Quản lý Kích thước sách";
@@ -14,7 +14,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.DimensionId)
+                @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Length)
@@ -36,7 +36,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DimensionId)
+                    @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Length)
@@ -51,8 +51,8 @@
                     @Html.DisplayFor(modelItem => item.Unit)
                 </td>
                 <td>
-                    <a href="/Dimensions/Edit" IdValue="@item.DimensionId" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
-                    <a href="/Dimensions/Delete" IdValue="@item.DimensionId" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
+                    <a href="/Dimensions/Edit" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
+                    <a href="/Dimensions/Delete" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
                 </td>
             </tr>
         }

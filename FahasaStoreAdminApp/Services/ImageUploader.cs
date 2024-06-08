@@ -1,7 +1,7 @@
 ﻿using CloudinaryDotNet.Actions;
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.Mvc;
-using FahasaStoreAdminApp.Models;
+using FahasaStoreAdminApp.Models.CustomModels;
 
 namespace BookStoreAPI.Services
 {
