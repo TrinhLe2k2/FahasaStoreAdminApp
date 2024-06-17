@@ -1,4 +1,4 @@
-﻿@model FahasaStoreAdminApp.Models.EModels.FlashSaleBookModel
+﻿@model FahasaStoreAdminApp.Models.EModels.StatusModel
 
 <!-- Button trigger modal -->
 <button type="button" id="btn-toggle" class="btn btn-primary" hidden data-bs-toggle="modal" data-bs-target="#appModal">
@@ -14,7 +14,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <span>Bạn có chắc muốn gỡ sản phẩm có id là <strong>@Model.Id</strong> không?</span>
+                <span>Bạn có chắc muốn xóa <strong>@Model.Name</strong> không?</span>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>

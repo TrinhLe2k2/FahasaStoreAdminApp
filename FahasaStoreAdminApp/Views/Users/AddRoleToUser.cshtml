@@ -1,5 +1,8 @@
-﻿@using FahasaStoreAdminApp.Components
-@model FahasaStoreAdminApp.Models.EModels.OrderModel
+﻿@{
+    var userId = ViewData["userId"] as string;
+    var email = ViewData["email"] as string;
+    var roles = ViewData["roles"] as List<string>;
+}
 
 <div>
     <!-- Button trigger modal -->
@@ -10,27 +13,34 @@
     <!-- Modal -->
     <div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form asp-action="Create">
+            <form asp-action="AddRoleToUser" asp-controller="Account" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="appModalLabel">Thêm Mới</h1>
+                        <h1 class="modal-title fs-5" id="appModalLabel">Thêm role cho @email </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col">
-                                <div class="form-group">
-                                    <label asp-for="Name" class="control-label"></label>
-                                    <input asp-for="Name" class="form-control" />
-                                    <span asp-validation-for="Name" class="text-danger"></span>
-                                </div>
+                                <input name="userId" value="@userId" hidden />
+                                <select name="role" class="form-select">
+                                    @{
+                                        if (roles != null && roles.Count > 0)
+                                        {
+                                            foreach (var role in roles)
+                                            {
+                                                <option value="@role">@role</option>
+                                            }
+                                        }
+                                    }
+                                </select>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type="submit" value="Create New" class="btn btn-primary" />
+                        <input type="submit" value="Thêm Role" class="btn btn-primary" />
                     </div>
                 </div>
             </form>

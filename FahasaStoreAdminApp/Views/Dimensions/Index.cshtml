@@ -1,9 +1,9 @@
-﻿@model IEnumerable<FahasaStoreAdminApp.Entities.Dimension>
+﻿@model IEnumerable<FahasaStoreAdminApp.Models.DTO.DimensionDTO>
 
 @{
     ViewData["Title"] = "Quản lý Kích thước sách";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ActiveSidebar"] = 4;
+    ViewData["ActiveSidebar"] = 7;
     ViewData["UrlCurrent"] = "/Dimensions/Index";
 }
 <partial name="_ToastrMessage" />
@@ -58,3 +58,4 @@
         }
     </tbody>
 </table>
+<partial name="_Paginated" />

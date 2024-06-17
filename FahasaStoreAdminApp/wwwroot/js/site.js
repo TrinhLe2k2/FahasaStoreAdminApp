@@ -25,8 +25,11 @@ const HandlerCRUD = (e, event) => {
     event.preventDefault();
     var href = $(e).attr("href");
     var id = $(e).attr("IdValue");
+    if (id) {
+        href = `${href}/${id}`;
+    }
     $.ajax({
-        url: `${href}/${id}`,
+        url: href,
         type: 'GET',
         success: function (data) {
             $('#modal-for-crud').html(data);
@@ -53,4 +56,32 @@ const GetUserLogin = () => {
             console.log("Error: user login");
         }
     });
+}
+
+const RenderPartialView = (e, event) => {
+    event.preventDefault();
+    var href = $(e).attr("href");
+    var id = $(e).attr("IdValue");
+    $.ajax({
+        url: `${href}/${id}`,
+        type: 'GET',
+        success: function (data) {
+            $('#modal-for-crud').html(data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            var errorMessage = `Error fetching data: ${jqXHR.status} ${jqXHR.statusText}`;
+            if (jqXHR.responseText) {
+                errorMessage += `\nResponse: ${jqXHR.responseText}`;
+            }
+            alert(errorMessage);
+        }
+    });
+}
+
+function handleSelectedChange(e, event) {
+    var value = $(e).val();
+    if (value == "0") {
+        $(e).removeAttr('name');
+    }
+    document.getElementById("filter-form").submit();
 }

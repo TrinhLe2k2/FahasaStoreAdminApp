@@ -1,0 +1,62 @@
+﻿@model IEnumerable<FahasaStoreAdminApp.Models.DTO.NotificationDTO>
+
+@{
+    ViewData["Title"] = "Quản lý Thông báo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["ActiveSidebar"] = 4;
+    ViewData["UrlCurrent"] = "/Notifications/Index";
+}
+<partial name="_ToastrMessage" />
+<div class="d-flex justify-content-between">
+    <a href="/Notifications/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
+        Create New
+    </a>
+    <a href="/NotificationTypes/Index" class="btn btn-outline-primary mb-3">
+        Quản lý loại thông báo
+    </a>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NotificationType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NotificationType.Name)
+                </td>
+                <td>
+                    <a href="/Notifications/Details" IdValue="@item.Id" onclick="HandlerCRUD(this, event)">@item.Title</a>
+                </td>
+                <td>
+                    @(item.User?.FullName ?? "Tất cả")
+                </td>
+                <td>
+                    <a href="/Notifications/Edit" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
+                    <a href="/Notifications/Delete" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<partial name="_Paginated" />

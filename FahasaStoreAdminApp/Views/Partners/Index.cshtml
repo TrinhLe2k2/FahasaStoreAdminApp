@@ -1,13 +1,17 @@
-﻿@using FahasaStoreAdminApp.Entities
-@model IEnumerable<Partner>
+﻿@using FahasaStoreAdminApp.Models.DTO
+@model IEnumerable<PartnerDTO>
 
 @{
     ViewData["Title"] = "Quản lý đối tác";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ActiveSidebar"] = 4;
+    ViewData["ActiveSidebar"] = 7;
     ViewData["UrlCurrent"] = "/Partners/Index";
 
-    var PartnerTypes = ViewData["PartnerTypes"] as List<PartnerType>;
+    var PartnerTypes = ViewData["PartnerTypes"] as List<PartnerTypeDTO>;
+
+    var filters = ViewData["Filters"] as Dictionary<string, string> ?? new Dictionary<string, string>();
+    ViewData["Action"] = "Index";
+    ViewData["Controller"] = "Partners";
 }
 <partial name="_ToastrMessage" />
 <div class="d-flex justify-content-between">
@@ -15,44 +19,31 @@
         Create New
     </a>
     <div>
-        @{
-            if (PartnerTypes != null)
-            {
-                <select id="select-PartnerType" class="form-select">
-                    <option value="0" selected>--Tất cả thể loại--</option>
-                    @foreach (var item in PartnerTypes)
-                    {
-                        <option value="@item.Id">@item.Name</option>
-                    }
-                </select>
-                @section Scripts {
-                <script>
-                    $(document).ready(function () {
-                        $('#select-PartnerType').change(function () {
-                            var PartnerTypeId = $(this).val();
-                            // Chỉ thực hiện AJAX nếu một tùy chọn khác "Tất cả thể loại" được chọn
-                            if (PartnerTypeId) {
-                                $.ajax({
-                                    url: '/Partners/GetPartnersByPartnerType/' + PartnerTypeId,
-                                    type: 'GET',
-                                    success: function (data) {
-                                        $('tbody').html(data);
-                                    },
-                                    error: function (xhr, status, error) {
-                                        alert('AJAX Error: ' + status + error)
-                                        console.error('AJAX Error: ' + status + error);
-                                    }
-                                });
+        @if (PartnerTypes != null)
+        {
+            <form id="filter-form" method="get" action="/Partners/Index">
+                <div class="input-group">
+                    <select class="form-select" name="filters[PartnerTypeId]" onchange="handleSelectedChange(this, event)">
+                        <option value="0">--Tất cả lựa chọn--</option>
+                        @foreach (var item in PartnerTypes)
+                        {
+                            var selected = filters.ContainsKey("PartnerTypeId") && filters["PartnerTypeId"] == item.Id.ToString() ? "selected" : "";
+                            if (selected == "selected")
+                            {
+                                <option value="@item.Id" selected>@item.Name</option>
                             }
-                        });
-                    });
-                </script>
-                }
-            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        }
+                    </select>
+                    <a href="/Partners/Create" class="btn btn-outline-secondary" onclick="HandlerCRUD(this, event)">Thêm Đối Tác</a>
+                </div>
+            </form>
         }
     </div>
 </div>
-
 
 <table class="table">
     <thead>
@@ -96,3 +87,5 @@
         }
     </tbody>
 </table>
+
+<partial name="_Paginated" />

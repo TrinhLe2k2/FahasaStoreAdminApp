@@ -1,10 +1,10 @@
 ﻿@using FahasaStoreAdminApp.Components
-@model IEnumerable<FahasaStoreAdminApp.Entities.Menu>
+@model IEnumerable<FahasaStoreAdminApp.Models.DTO.MenuDTO>
 
 @{
     ViewData["Title"] = "Quản Lý Menu";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ActiveSidebar"] = 3;
+    ViewData["ActiveSidebar"] = 5;
     ViewData["UrlCurrent"] = "/Menus/Index";
 }
 
@@ -56,3 +56,4 @@
         }
     </tbody>
 </table>
+<partial name="_Paginated" />

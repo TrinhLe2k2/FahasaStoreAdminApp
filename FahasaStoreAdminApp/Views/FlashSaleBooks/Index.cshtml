@@ -1,12 +1,18 @@
-﻿@using FahasaStoreAdminApp.Entities
-@model IEnumerable<FlashSaleBook>
+﻿@using FahasaStoreAdminApp.Models.DTO
+
+@model IEnumerable<FlashSaleBookDTO>
 
 @{
     ViewData["Title"] = "Quản lý sách trong flash sale";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ActiveSidebar"] = 4;
+    ViewData["ActiveSidebar"] = 6;
     ViewData["UrlCurrent"] = "/FlashSaleBooks/Index";
-    var FlashSales = ViewData["FlashSales"] as List<FlashSale>;
+
+    var FlashSales = ViewData["FlashSales"] as List<FlashSaleDTO>;
+
+    var filters = ViewData["Filters"] as Dictionary<string, string> ?? new Dictionary<string, string>();
+    ViewData["Action"] = "Index";
+    ViewData["Controller"] = "FlashSaleBooks";
 }
 <partial name="_ToastrMessage" />
 <div class="d-flex justify-content-between">
@@ -14,45 +20,31 @@
         Create New
     </a>
     <div>
-        @{
-            if (FlashSales != null && FlashSales.Count > 0)
-            {
-                <select id="select-flashSale" class="form-select">
-                    <option value="0" selected>--Tất cả lựa chọn--</option>
-                    @foreach (var item in FlashSales)
-                    {
-                        <option value="@item.Id">@item.StartDate - @item.EndDate</option>
-                    }
-                </select>
-                @section Scripts {
-                <script>
-                    $(document).ready(function () {
-                        $('#select-flashSale').change(function () {
-                            var flashSaleId = $(this).val();
-                            // Chỉ thực hiện AJAX nếu một tùy chọn khác "Tất cả thể loại" được chọn
-                            if (flashSaleId) {
-                                $.ajax({
-                                    url: '/Subcategories/GetFlashSaleBooksByFlashSale/' + flashSaleId,
-                                    type: 'GET',
-                                    success: function (data) {
-                                        $('tbody').html(data);
-                                    },
-                                    error: function (xhr, status, error) {
-                                        alert('AJAX Error: ' + status + error)
-                                        console.error('AJAX Error: ' + status + error);
-                                    }
-                                });
+        @if (FlashSales != null && FlashSales.Count > 0)
+        {
+            <form id="filter-form" method="get" action="/FlashSaleBooks/Index">
+                <div class="input-group">
+                    <select class="form-select" name="filters[FlashSaleId]" onchange="handleSelectedChange(this, event)">
+                        <option value="0">--Tất cả lựa chọn--</option>
+                        @foreach (var item in FlashSales)
+                        {
+                            var selected = filters.ContainsKey("FlashSaleId") && filters["FlashSaleId"] == item.Id.ToString() ? "selected" : "";
+                            if (selected == "selected")
+                            {
+                                <option value="@item.Id" selected>@item.StartDate.ToString("dd/MM/yyyy") - @item.EndDate.ToString("dd/MM/yyyy")</option>
                             }
-                        });
-                    });
-                </script>
-                }
-            }
+                            else
+                            {
+                                <option value="@item.Id">@item.StartDate.ToString("dd/MM/yyyy") - @item.EndDate.ToString("dd/MM/yyyy")</option>
+                            }
+                        }
+                    </select>
+                    <a href="/FlashSales/Create" class="btn btn-outline-secondary" onclick="HandlerCRUD(this, event)">Thêm Sale</a>
+                </div>
+            </form>
         }
     </div>
 </div>
-
-
 
 <table class="table">
     <thead>
@@ -83,10 +75,10 @@
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
-                    @item.FlashSale.StartDate - @item.FlashSale.EndDate
+                    @item.FlashSale.StartDate.ToString("dd/MM/yyyy") - @item.FlashSale.EndDate.ToString("dd/MM/yyyy")
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Book.Name)
+                    <a href="/Books/Details" IdValue="@item.Book.Id" onclick="HandlerCRUD(this, event)">@item.Book.Name</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DiscountPercentage)
@@ -102,3 +94,5 @@
         }
     </tbody>
 </table>
+
+<partial name="_Paginated" />

@@ -1,14 +1,12 @@
-﻿@using FahasaStoreAdminApp.Entities
-@using FahasaStoreAdminApp.Models.CustomModels
-@model IEnumerable<FahasaStoreAdminApp.Entities.Book>
+﻿@using FahasaStoreAdminApp.Models.DTO
+@model IEnumerable<BookDTO>
 
 @{
     ViewData["Title"] = "Quản lý sách";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ActiveSidebar"] = 4;
+    ViewData["ActiveSidebar"] = 7;
     ViewData["UrlCurrent"] = "/Books/Index";
     var ActiveID = TempData["ActiveID"] as int?;
-    var pageData = ViewData["PageData"] as PaginatedBooksVM;
 }
 @{
     if (ActiveID != null)
@@ -33,7 +31,7 @@
     <thead>
         <tr>
             <th>
-                    @Html.DisplayNameFor(model => model.Id)
+                @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -78,28 +76,5 @@
     </tbody>
 </table>
 
-@if (pageData != null)
-{
-    <ul class="pagination justify-content-end mb-0">
-        <li class="page-item @(pageData.PageNumber == 1 ? "disabled" : "")">
-            <a class="page-link" href="@Url.Action("Index", new { page = 1 })">First</a>
-        </li>
-        <li class="page-item @(pageData.PageNumber == 1 ? "disabled" : "")">
-            <a class="page-link" href="@Url.Action("Index", new { page = pageData.PageNumber - 1 })">Previous</a>
-        </li>
+<partial name="_Paginated" />
 
-        @for (int i = pageData.StartPage; i <= pageData.EndPage; i++)
-        {
-            <li class="page-item @(pageData.PageNumber == i ? "active" : "")">
-                <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
-            </li>
-        }
-
-        <li class="page-item @(pageData.PageNumber == pageData.PageCount ? "disabled" : "")">
-            <a class="page-link" href="@Url.Action("Index", new { page = pageData.PageNumber + 1 })">Next</a>
-        </li>
-        <li class="page-item @(pageData.PageNumber == pageData.PageCount ? "disabled" : "")">
-            <a class="page-link" href="@Url.Action("Index", new { page = pageData.PageCount })">Last</a>
-        </li>
-    </ul>
-}

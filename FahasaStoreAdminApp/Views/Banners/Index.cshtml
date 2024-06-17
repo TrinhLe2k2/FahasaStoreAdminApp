@@ -1,9 +1,9 @@
-﻿@model IEnumerable<FahasaStoreAdminApp.Entities.Banner>
+﻿@model IEnumerable<FahasaStoreAdminApp.Models.DTO.BannerDTO>
 
 @{
     ViewData["Title"] = "Quản lý banner";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ActiveSidebar"] = 3;
+    ViewData["ActiveSidebar"] = 5;
     ViewData["UrlCurrent"] = "/Banners/Index";
 }
 <partial name="_ToastrMessage" />
@@ -52,3 +52,4 @@
         }
     </tbody>
 </table>
+<partial name="_Paginated" />

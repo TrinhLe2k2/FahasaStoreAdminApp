@@ -1,10 +1,14 @@
-﻿namespace FahasaStoreAdminApp.Models.EModels
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace FahasaStoreAdminApp.Models.EModels
 {
     public class AddressModel
     {
         public int Id { get; set; }
         public string UserId { get; set; } = null!;
         public string ReceiverName { get; set; } = null!;
+        public string Phone { get; set; } = null!;
         public string Province { get; set; } = null!;
         public string District { get; set; } = null!;
         public string Ward { get; set; } = null!;
@@ -67,6 +71,7 @@
         public int AuthorId { get; set; }
         public int CoverTypeId { get; set; }
         public int DimensionId { get; set; }
+        [Display(Name = "Tên Sách")]
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
         public decimal Price { get; set; }
@@ -91,7 +96,7 @@
         public int Id { get; set; }
         public int CartId { get; set; }
         public int BookId { get; set; }
-        public int? Quantity { get; set; }
+        public int Quantity { get; set; }
         public DateTime? CreatedAt { get; set; }
     }
 
@@ -196,6 +201,7 @@
         public int Id { get; set; }
         public string UserId { get; set; } = null!;
         public int? VoucherId { get; set; }
+        [Display(Name = "Địa chỉ giao hàng")]
         public int AddressId { get; set; }
         public int PaymentMethodId { get; set; }
         public string? Note { get; set; }
@@ -271,6 +277,7 @@
     {
         public int Id { get; set; }
         public int BookId { get; set; }
+        public int OrderId { get; set; }
         public string UserId { get; set; } = null!;
         public int Rating { get; set; }
         public string? Comment { get; set; }
@@ -320,8 +327,8 @@
         public int DiscountPercent { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public decimal MinOrderAmount { get; set; }
-        public decimal MaxDiscountAmount { get; set; }
+        public int MinOrderAmount { get; set; }
+        public int MaxDiscountAmount { get; set; }
         public int UsageLimit { get; set; }
         public DateTime? CreatedAt { get; set; }
     }

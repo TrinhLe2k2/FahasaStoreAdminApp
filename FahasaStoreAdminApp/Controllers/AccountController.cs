@@ -1,7 +1,10 @@
-﻿using FahasaStoreAdminApp.Models.CustomModels;
+﻿using FahasaStoreAdminApp.Filters;
+using FahasaStoreAdminApp.Helpers;
+using FahasaStoreAdminApp.Models.CustomModels;
 using FahasaStoreAdminApp.Services;
 using FahasaStoreAdminApp.Services.EntityService;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FahasaStoreAdminApp.Controllers
 {
@@ -9,13 +12,15 @@ namespace FahasaStoreAdminApp.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly IUserService _userService;
+        private readonly UserLogined _userLogined;
         private readonly IJwtTokenDecoder _jwtTokenDecoder;
 
-        public AccountController(IAccountService accountService, IJwtTokenDecoder jwtTokenDecoder, IUserService userService)
+        public AccountController(IAccountService accountService, IJwtTokenDecoder jwtTokenDecoder, IUserService userService, UserLogined userLogined)
         {
             _accountService = accountService;
             _jwtTokenDecoder = jwtTokenDecoder;
             _userService = userService;
+            _userLogined = userLogined;
         }
 
         public IActionResult Login()
@@ -29,61 +34,66 @@ namespace FahasaStoreAdminApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
-            }
-            try
-            {
-                var accessToken = await _accountService.LogInAsync(model);
-                var userClaims = _jwtTokenDecoder.DecodeToken(accessToken).Claims;
-                var UserId = userClaims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-                HttpContext.Session.SetString("JWToken", accessToken);
-                HttpContext.Session.SetString("UserId", UserId);
+                ModelState.AddModelError(string.Empty, "login failed. Please try again.");
                 return RedirectToAction("Index", "Home");
             }
-            catch (Exception ex)
+            var accessToken = await _accountService.LogInAsync(model);
+            var userClaims = _jwtTokenDecoder.DecodeToken(accessToken).Claims;
+            var UserId = userClaims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var roles = userClaims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+
+            if (string.IsNullOrEmpty(UserId) || userClaims == null || !roles.Contains(AppRole.Admin) && !roles.Contains(AppRole.Staff)) 
             {
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return View(model);
+                TempData["ErrorMessage"] = "Bạn không có quyền truy cập.";
+                return RedirectToAction("LogOut");
             }
+
+            var currentUser = await _userService.GetByIdAsync(UserId);
+            _userLogined.CurrentUser = currentUser;
+            _userLogined.JWToken = accessToken;
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
         public async Task<IActionResult> LogOut()
         {
-            var accessToken = HttpContext.Session.GetString("JWToken");
-            if (string.IsNullOrEmpty(accessToken))
+            if (_userLogined.JWToken != null)
             {
-                TempData["ErrorMessage"] = "Lỗi token đăng nhập.";
-                return RedirectToAction("Login", "Account");
+                var result = await _accountService.LogOutAsync(_userLogined.JWToken);
+                HttpContext.Session.Clear();
             }
-            var result = await _accountService.LogOutAsync(accessToken);
-
-            if (result)
-            {
-                HttpContext.Session.Remove("JWToken");
-                HttpContext.Session.Remove("FullName");
-                HttpContext.Session.Remove("Avatar");
-
-                TempData["SuccessMessage"] = "Bạn đã đăng xuất thành công.";
-                return RedirectToAction("Login", "Account");
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Đã xảy ra lỗi khi đăng xuất.";
-                return RedirectToAction("Login", "Account");
-            }
+            TempData["SuccessMessage"] = "Bạn đã đăng xuất thành công.";
+            return RedirectToAction("Login");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> UserLogin()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(AppRole.Admin)]
+        public async Task<IActionResult> AddRoleToUser(string userId, string role)
         {
-            var userId = HttpContext.Session.GetString("UserId");
-            if (userId != null)
+            var result = await _accountService.AddRoleToUser(userId, role);
+            if (result)
             {
-                var user = await _userService.GetByIdAsync(userId);
-                return Json(user);
+                TempData["SuccessMessage"] = "Cập nhật thành công";
+                return RedirectToAction("Index", "Users");
             }
-            return RedirectToAction("Error", "Error");
+            TempData["ErrorMessage"] = "Cập nhật thất bại";
+            return RedirectToAction("Index", "Users");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(AppRole.Admin)]
+        public async Task<IActionResult> RemoveRoleFromUser(string userId, string role)
+        {
+            var result = await _accountService.RemoveRoleFromUser(userId, role);
+            if (result)
+            {
+                TempData["SuccessMessage"] = "Cập nhật thành công";
+                return RedirectToAction("Index", "Users");
+            }
+            TempData["ErrorMessage"] = "Cập nhật thất bại";
+            return RedirectToAction("Index", "Users");
         }
     }
 }

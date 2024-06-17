@@ -1,0 +1,52 @@
+﻿@{
+    var pageData = ViewData["PageData"] as FahasaStoreAdminApp.Models.Response.PaginatedResponse;
+    var filters = ViewData["Filters"] as Dictionary<string, string> ?? new Dictionary<string, string>();
+    var action = ViewData["Action"] as string;
+    var controller = ViewData["Controller"] as string;
+}
+
+<div>
+    @if (pageData != null && pageData.PageCount > 1)
+    {
+        <ul class="pagination justify-content-end mb-0">
+            <li class="page-item @(pageData.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action(action, controller, MergeRouteValues(new { page = 1 }, filters))">First</a>
+            </li>
+            <li class="page-item @(pageData.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action(action, controller, MergeRouteValues(new { page = pageData.PageNumber - 1 }, filters))">Previous</a>
+            </li>
+
+            @for (int i = pageData.StartPage; i <= pageData.EndPage; i++)
+            {
+                <li class="page-item @(pageData.PageNumber == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action(action, controller, MergeRouteValues(new { page = i }, filters))">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(pageData.PageNumber == pageData.PageCount ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action(action, controller, MergeRouteValues(new { page = pageData.PageNumber + 1 }, filters))">Next</a>
+            </li>
+            <li class="page-item @(pageData.PageNumber == pageData.PageCount ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action(action, controller, MergeRouteValues(new { page = pageData.PageCount }, filters))">Last</a>
+            </li>
+        </ul>
+    }
+
+    @functions {
+        private RouteValueDictionary MergeRouteValues(object routeValues, Dictionary<string, string> filters)
+        {
+            var result = new RouteValueDictionary(routeValues);
+            if (filters != null)
+            {
+                foreach (var filter in filters)
+                {
+                    if (filter.Key != "page" && filter.Key != "size" && filter.Key != "sortField" && filter.Key != "sortDirection")
+                    {
+                        result[filter.Key] = filter.Value;
+                    }
+                }
+            }
+            return result;
+        }
+    }
+</div>

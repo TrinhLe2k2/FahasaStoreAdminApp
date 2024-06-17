@@ -1,0 +1,39 @@
+﻿
+@{
+    var userId = ViewData["userId"] as string;
+    var role = ViewData["role"] as string;
+    var email = ViewData["email"] as string;
+}
+
+<!-- Button trigger modal -->
+<button type="button" id="btn-toggle" class="btn btn-primary" hidden data-bs-toggle="modal" data-bs-target="#appModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="appModalLabel">Xác Nhận Xóa</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span>Bạn có chắc muốn gỡ role <strong>@role</strong> của <strong>@email</strong> không?</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <form asp-action="RemoveRoleFromUser" asp-controller="Account" method="post">
+                    <input name="userId" value="@userId" hidden />
+                    <input name="role" value="@role" hidden />
+
+                    <input type="submit" value="Delete" class="btn btn-danger" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btn-toggle").click();
+</script>

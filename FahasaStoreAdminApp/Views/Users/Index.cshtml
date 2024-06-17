@@ -1,0 +1,66 @@
+﻿@model IEnumerable<FahasaStoreAdminApp.Models.DTO.AspNetUserDTO>
+
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["ActiveSidebar"] = 3;
+    ViewData["UrlCurrent"] = "/Users/Index";
+}
+<partial name="_ToastrMessage" />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Roles)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </th>
+            <th></th> 
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @{
+                        if(item.Roles.Count > 0)
+                        {
+                            foreach (var role in item.Roles)
+                            {
+                                <div>@role.Name <a href="/Users/RemoveRoleFromUser?userId=@item.Id&email=@item.Email&role=@role.Name" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a></div>
+                            }
+                        }
+                    }
+                </td>
+                <td>
+                    <img src="@item.ImageUrl" alt="Image" width="50" height="50" class="object-fit-contain rounded-3" />
+                </td>
+                <td>
+                    <a href="/Users/AddRoleToUser?userId=@item.Id&email=@item.Email" onclick="HandlerCRUD(this, event)" class="btn btn-outline-primary">Add role</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<partial name="_Paginated" />

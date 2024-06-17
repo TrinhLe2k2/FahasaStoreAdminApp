@@ -1,33 +1,46 @@
 ﻿using AutoMapper;
 using BookStoreAPI.Services;
+using FahasaStoreAdminApp.Models.Response;
 using FahasaStoreAdminApp.Services;
-using FahasaStoreAdminApp.Services.EntityService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 // FahasaStoreAdminApp.Models.EModels.
 namespace FahasaStoreAdminApp.Helpers
 {
-    public abstract class GenericController<TEntity, TModel, TKey> : Controller
+    public abstract class GenericController<TEntity, TModel, DTO, TKey> : Controller
         where TEntity : class
         where TModel : class
+        where DTO : class
         where TKey : IEquatable<TKey>
     {
-        private readonly IGenericService<TEntity, TModel, TKey> _service;
+        private readonly IGenericService<TEntity, TModel, DTO, TKey> _service;
         protected readonly IMapper _mapper;
         protected readonly IImageUploader _imageUploader;
-
-        protected GenericController(IGenericService<TEntity, TModel, TKey> service, IMapper mapper, IImageUploader imageUploader)
+        protected GenericController(IGenericService<TEntity, TModel, DTO, TKey> service, IMapper mapper, IImageUploader imageUploader)
         {
             _service = service;
             _mapper = mapper;
             _imageUploader = imageUploader;
         }
-
-        public virtual async Task<IActionResult> Index()
+        public virtual async Task<IActionResult> Index(
+            Dictionary<string, string>? filters,
+            string? sortField,
+            string? sortDirection,
+            int page = 1,
+            int size = 10)
         {
             try
             {
-                return View(await _service.GetAllAsync());
+                filters?.Remove("sortField");
+                filters?.Remove("sortDirection");
+                filters?.Remove("page");
+                filters?.Remove("size");
+
+                var pageList = await _service.GetFilteredPagination(filters, sortField, sortDirection, page, size);
+                var pageData = _mapper.Map<PaginatedResponse>(pageList);
+                ViewData["PageData"] = pageData;
+                ViewData["Filters"] = filters;
+                return View(pageList.Items);
             }
             catch
             {
@@ -113,13 +126,12 @@ namespace FahasaStoreAdminApp.Helpers
                 return RedirectToAction("Error", "Error", new { statusCode = 500 });
             }
         }
-
         public virtual async Task<IActionResult> Edit(TKey id)
         {
             try
             {
-                var entity = await _service.GetByIdAsync(id);
-                return PartialView(_mapper.Map<TModel>(entity));
+                var entity = await _service.GetItemUpdateByIdAsync(id);
+                return PartialView(entity);
             }
             catch
             {
@@ -127,7 +139,6 @@ namespace FahasaStoreAdminApp.Helpers
                 return RedirectToAction("Error", "Error", new { statusCode = 500 });
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> Edit(TKey id, TModel model, IFormFile? fileImage)
@@ -196,12 +207,11 @@ namespace FahasaStoreAdminApp.Helpers
                 return RedirectToAction("Error", "Error", new { statusCode = 500 });
             }
         }
-
         public virtual async Task<IActionResult> Delete(TKey id)
         {
             try
             {
-                var entity = await _service.GetByIdAsync(id);
+                var entity = await _service.GetItemUpdateByIdAsync(id);
                 return PartialView(_mapper.Map<TModel>(entity));
             }
             catch
@@ -210,7 +220,6 @@ namespace FahasaStoreAdminApp.Helpers
                 return RedirectToAction("Error", "Error", new { statusCode = 500 });
             }
         }
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> DeleteConfirmed(TKey id)
@@ -229,6 +238,25 @@ namespace FahasaStoreAdminApp.Helpers
             catch
             {
                 TempData["ErrorMessage"] = "Đã xảy ra lỗi khi xóa dữ liệu.";
+                return RedirectToAction("Error", "Error", new { statusCode = 500 });
+            }
+        }
+
+        public virtual async Task<IActionResult> GetFilteredPagination(
+            Dictionary<string, string>? filters,
+            string? sortField,
+            string? sortDirection,
+            int page = 1,
+            int size = 10)
+        {
+            try
+            {
+                var pageList = await _service.GetFilteredPagination(filters, sortField, sortDirection, page, size);
+                return PartialView(pageList.Items);
+            }
+            catch
+            {
+                TempData["ErrorMessage"] = "Đã xảy ra lỗi khi lấy dữ liệu. Vui lòng thử lại sau.";
                 return RedirectToAction("Error", "Error", new { statusCode = 500 });
             }
         }

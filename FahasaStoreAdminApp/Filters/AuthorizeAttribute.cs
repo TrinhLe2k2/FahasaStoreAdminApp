@@ -24,16 +24,31 @@ namespace FahasaStoreAdminApp.Filters
                 return;
             }
 
-            var jwtTokenDecoder = (IJwtTokenDecoder)context.HttpContext.RequestServices.GetService(typeof(IJwtTokenDecoder));
-            var userClaims = jwtTokenDecoder.DecodeToken(accessToken).Claims;
-            var roles = userClaims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-
-            if (!_roles.Any(role => roles.Contains(role)))
+            var jwtTokenDecoder = (IJwtTokenDecoder?)context.HttpContext.RequestServices.GetService(typeof(IJwtTokenDecoder));
+            if (jwtTokenDecoder == null)
             {
-                context.Result = new RedirectToActionResult("AccessDenied", "Error", null);
+                context.Result = new RedirectToActionResult("Error", "Home", new { message = "Service error" });
+                return;
+            }
+
+            try
+            {
+                var userClaims = jwtTokenDecoder.DecodeToken(accessToken).Claims;
+                var roles = userClaims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+
+                if (!_roles.Any(role => roles.Contains(role)))
+                {
+                    context.Result = new RedirectToActionResult("AccessDenied", "Error", null);
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+                context.Result = new RedirectToActionResult("Error", "Home", new { message = "Token error" });
                 return;
             }
         }
     }
+
 
 }

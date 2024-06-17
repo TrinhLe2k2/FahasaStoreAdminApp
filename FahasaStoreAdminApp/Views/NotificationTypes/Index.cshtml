@@ -1,0 +1,44 @@
+﻿@model IEnumerable<FahasaStoreAdminApp.Models.DTO.NotificationTypeDTO>
+
+@{
+    ViewData["Title"] = "Quản lý loại thông báo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["ActiveSidebar"] = 4;
+    ViewData["UrlCurrent"] = "/NotificationTypes/Index";
+}
+<partial name="_ToastrMessage" />
+<a href="/NotificationTypes/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
+    Create New
+</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    <a href="/NotificationTypes/Edit" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
+                    <a href="/NotificationTypes/Delete" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<partial name="_Paginated" />

@@ -1,9 +1,9 @@
-﻿@model IEnumerable<FahasaStoreAdminApp.Entities.Category>
+﻿@model IEnumerable<FahasaStoreAdminApp.Models.DTO.CategoryDTO>
 
 @{
     ViewData["Title"] = "Quản lý Thể loại";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ActiveSidebar"] = 4;
+    ViewData["ActiveSidebar"] = 7;
     ViewData["UrlCurrent"] = "/Categories/Index";
 }
 <partial name="_ToastrMessage" />
@@ -47,3 +47,4 @@
         }
     </tbody>
 </table>
+<partial name="_Paginated" />

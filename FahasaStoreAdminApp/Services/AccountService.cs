@@ -1,5 +1,8 @@
-﻿using FahasaStoreAdminApp.Models.CustomModels;
+﻿using Azure.Core;
+using FahasaStoreAdminApp.Helpers;
+using FahasaStoreAdminApp.Models.CustomModels;
 using Newtonsoft.Json;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -9,13 +12,17 @@ namespace FahasaStoreAdminApp.Services
     {
         public Task<string> LogInAsync(LogInModel model);
         Task<bool> LogOutAsync(string accessToken);
+        Task<bool> AddRoleToUser(string userId, string role);
+        Task<bool> RemoveRoleFromUser(string userId, string role);
     }
     public class AccountService : IAccountService
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        public AccountService(IHttpClientFactory httpClientFactory)
+        private readonly UserLogined _userLogined;
+        public AccountService(IHttpClientFactory httpClientFactory, UserLogined userLogined)
         {
             _httpClientFactory = httpClientFactory;
+            _userLogined = userLogined;
         }
         public async Task<string> LogInAsync(LogInModel model)
         {
@@ -66,5 +73,71 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
+        public async Task<bool> AddRoleToUser(string userId, string role)
+        {
+            try
+            {
+                using (var httpClient = _httpClientFactory.CreateClient())
+                {
+                    // Tạo yêu cầu POST
+                    var request = new HttpRequestMessage(HttpMethod.Post, $"https://localhost:7069/api/Accounts/AddRoleToUser?userId={userId}&role={role}");
+
+                    // Thêm token vào header Authorization
+                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _userLogined.JWToken);
+
+                    // Gửi yêu cầu và đợi phản hồi
+                    var response = await httpClient.SendAsync(request);
+
+                    // Đảm bảo yêu cầu thành công
+                    response.EnsureSuccessStatusCode();
+
+                    return true;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                // Xử lý lỗi HTTP
+                throw new Exception("Error occurred while sending HTTP request.", ex);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi khác
+                throw new Exception("Error occurred while adding role to user.", ex);
+            }
+        }
+
+        public async Task<bool> RemoveRoleFromUser(string userId, string role)
+        {
+            try
+            {
+                using (var httpClient = _httpClientFactory.CreateClient())
+                {
+                    // Tạo yêu cầu DELETE
+                    var request = new HttpRequestMessage(HttpMethod.Delete, $"https://localhost:7069/api/Accounts/RemoveRoleFromUser?userId={userId}&role={role}");
+
+                    // Thêm token vào header Authorization
+                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _userLogined.JWToken);
+
+                    // Gửi yêu cầu và đợi phản hồi
+                    var response = await httpClient.SendAsync(request);
+
+                    // Đảm bảo yêu cầu thành công
+                    response.EnsureSuccessStatusCode();
+
+                    return true;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                // Xử lý lỗi HTTP
+                throw new Exception("Error occurred while sending HTTP request.", ex);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi khác
+                throw new Exception("Error occurred while removing role from user.", ex);
+            }
+        }
+        
     }
 }

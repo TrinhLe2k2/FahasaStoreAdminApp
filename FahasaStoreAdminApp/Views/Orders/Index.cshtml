@@ -1,17 +1,18 @@
-﻿@model IEnumerable<FahasaStoreAdminApp.Entities.Author>
+﻿@model IEnumerable<FahasaStoreAdminApp.Models.DTO.OrderDTO>
 
 @{
-    ViewData["Title"] = "Quản lý tác giả";
+    ViewData["Title"] = "Quản lý đơn hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ActiveSidebar"] = 4;
-    ViewData["UrlCurrent"] = "/Authors/Index";
+    ViewData["ActiveSidebar"] = 8;
+    ViewData["UrlCurrent"] = "/Orders/Index";
+
+    var filters = ViewData["Filters"] as Dictionary<string, string> ?? new Dictionary<string, string>();
+    ViewData["Action"] = "Index";
+    ViewData["Controller"] = "Orders";
 }
 
 <partial name="_ToastrMessage" />
 
-<a href="/Authors/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
-    Create New
-</a>
 <table class="table">
     <thead>
         <tr>
@@ -19,7 +20,16 @@
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address.ReceiverName)
+            </th>
+            <th>
+                Thành Tiền
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderStatuses)
             </th>
             <th></th>
         </tr>
@@ -32,13 +42,23 @@
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @((item.CreatedAt != null) ? item.CreatedAt.Value.ToString("dd/MM/yyyy (HH:mm)") : "Không có ngày tạo")
                 </td>
                 <td>
-                    <a href="/Authors/Edit" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
-                    <a href="/Authors/Delete" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
+                    @Html.DisplayFor(modelItem => item.Address.ReceiverName)
+                </td>
+                <td>
+                    @item.OrderItems.Sum(e => (e.Book.Price - e.Book.Price * e.Book.DiscountPercentage / 100) * e.Quantity).ToString("N0") đ
+                </td>
+                <td>
+                    @item.OrderStatuses.LastOrDefault()?.Status.Name
+                </td>
+                <td>
+                    <a href="/OrderStatus/CreateCustom?orderId=@item.Id" onclick="HandlerCRUD(this, event)" class="btn btn-outline-primary">Update Status</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<partial name="_Paginated" />

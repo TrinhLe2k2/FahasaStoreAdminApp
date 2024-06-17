@@ -9,6 +9,7 @@ namespace FahasaStoreAdminApp.Entities
         {
             OrderItems = new HashSet<OrderItem>();
             OrderStatuses = new HashSet<OrderStatus>();
+            Reviews = new HashSet<Review>();
         }
 
         public int Id { get; set; }
@@ -22,9 +23,10 @@ namespace FahasaStoreAdminApp.Entities
         public virtual Address Address { get; set; } = null!;
         public virtual PaymentMethod PaymentMethod { get; set; } = null!;
         public virtual AspNetUser User { get; set; } = null!;
-        public virtual Voucher Voucher { get; set; } = null!;
+        public virtual Voucher? Voucher { get; set; }
         public virtual Payment? Payment { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual ICollection<OrderStatus> OrderStatuses { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
     }
 }

@@ -1,10 +1,10 @@
-﻿@model IEnumerable<FahasaStoreAdminApp.Entities.Platform>
+﻿@model IEnumerable<FahasaStoreAdminApp.Models.DTO.PlatformDTO>
 
 @{
     ViewData["Title"] = "Quản lý liên kết mạng xã hội";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ActiveSidebar"] = 3;
-    ViewData["UrlCurrent"] = "/Platform/Index";
+    ViewData["ActiveSidebar"] = 5;
+    ViewData["UrlCurrent"] = "/Platforms/Index";
 }
 <partial name="_ToastrMessage" />
 <a href="/Platforms/Create" class="btn btn-primary mb-3" onclick="HandlerCRUD(this, event)">
@@ -51,3 +51,4 @@
 }
     </tbody>
 </table>
+<partial name="_Paginated" />

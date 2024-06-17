@@ -6,10 +6,12 @@ using FahasaStoreAdminApp.Models.EModels;
 using FahasaStoreAdminApp.Services.EntityService;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc;
+using FahasaStoreAdminApp.Models.DTO;
+using FahasaStoreAdminApp.Filters;
 
 namespace FahasaStoreAdminApp.Controllers
 {
-    public class FlashSaleBooksController : GenericController<FlashSaleBook, FlashSaleBookModel, int>
+    public class FlashSaleBooksController : GenericController<FlashSaleBook, FlashSaleBookModel, FlashSaleBookDTO, int>
     {
         private readonly IFlashSaleService _FlashSaleService;
         private readonly IFlashSaleBookService _FlashSaleBookService;
@@ -21,32 +23,33 @@ namespace FahasaStoreAdminApp.Controllers
             _BookService = bookService;
         }
 
-        public override async Task<IActionResult> Index()
+        [Authorize(AppRole.Admin, AppRole.Staff)]
+        public override async Task<IActionResult> Index(
+            Dictionary<string, string>? filters,
+            string? sortField,
+            string? sortDirection,
+            int page = 1,
+            int size = 10)
         {
-            var FlashSales = await _FlashSaleService.GetAllAsync();
-            var FlashSaleSelectList = FlashSales.Select(d => new
-            {
-                Id = d.Id,
-                DisplayText = $"{d.StartDate} - {d.EndDate}"
-            });
-            ViewData["FlashSales"] = new SelectList(FlashSaleSelectList, "Id", "DisplayText");
-            ViewData["Books"] = new SelectList(await _BookService.GetAllAsync(), "Id", "Name");
-            return await base.Index();
+            ViewData["FlashSales"] = await _FlashSaleService.GetAllAsync();
+            return await base.Index(filters, sortField, sortDirection, page, size);
         }
 
+        [Authorize(AppRole.Admin)]
         public override async Task<ActionResult> Create()
         {
             var FlashSales = await _FlashSaleService.GetAllAsync();
             var FlashSaleSelectList = FlashSales.Select(d => new
             {
                 Id = d.Id,
-                DisplayText = $"{d.StartDate} - {d.EndDate}"
+                DisplayText = $"{d.StartDate.ToString("dd/MM/yyyy")} - {d.EndDate.ToString("dd/MM/yyyy")}"
             });
             ViewData["FlashSales"] = new SelectList(FlashSaleSelectList, "Id", "DisplayText");
             ViewData["Books"] = new SelectList(await _BookService.GetAllAsync(), "Id", "Name");
             return PartialView();
         }
 
+        [Authorize(AppRole.Admin)]
         public override async Task<IActionResult> Edit(int id)
         {
             var FlashSales = await _FlashSaleService.GetAllAsync();
@@ -60,9 +63,23 @@ namespace FahasaStoreAdminApp.Controllers
             return await base.Edit(id);
         }
 
+        [Authorize(AppRole.Admin, AppRole.Staff)]
         public async Task<ActionResult> GetFlashSaleBooksByFlashSale(string id)
         {
             return PartialView(await _FlashSaleBookService.GetListByAsync("FlashSaleId", id));
         }
+
+        [Authorize(AppRole.Admin)]
+        public override Task<IActionResult> Delete(int id)
+        {
+            return base.Delete(id);
+        }
+
+        [Authorize(AppRole.Admin)]
+        public override Task<IActionResult> Details(int id)
+        {
+            return base.Details(id);
+        }
+
     }
 }

@@ -5,5 +5,10 @@
         public const string Admin = "Administrator";
         public const string Customer = "Customer";
         public const string Staff = "Staff";
+
+        public static readonly string[] Roles = new string[]
+        {
+            Admin, Customer, Staff
+        };
     }
 }

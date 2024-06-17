@@ -1,9 +1,9 @@
-﻿@model IEnumerable<FahasaStoreAdminApp.Entities.CoverType>
+﻿@model IEnumerable<FahasaStoreAdminApp.Models.DTO.CoverTypeDTO>
 
 @{
     ViewData["Title"] = "Quản lý loại bìa sách";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ActiveSidebar"] = 4;
+    ViewData["ActiveSidebar"] = 7;
     ViewData["UrlCurrent"] = "/CoverTypes/Index";
 }
 <partial name="_ToastrMessage" />
@@ -40,3 +40,4 @@
         }
     </tbody>
 </table>
+<partial name="_Paginated" />

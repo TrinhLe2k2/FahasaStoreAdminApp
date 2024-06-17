@@ -1,4 +1,6 @@
 ﻿using FahasaStoreAdminApp.Entities;
+using FahasaStoreAdminApp.Filters;
+using FahasaStoreAdminApp.Helpers;
 using FahasaStoreAdminApp.Models.CustomModels;
 using FahasaStoreAdminApp.Models.EModels;
 using FahasaStoreAdminApp.Services;
@@ -20,12 +22,14 @@ namespace FahasaStoreAdminApp.Controllers
             _jwtTokenDecoder = jwtTokenDecoder;
         }
 
-        //[Authorize(AppRole.Customer, AppRole.Admin, AppRole.Staff )]
-        public ActionResult Index()
+        [Authorize(AppRole.Admin, AppRole.Staff )]
+        public async Task<ActionResult> Index(int? year)
         {
-            return View();
+            var statistics = await _homeService.GetYearlyStatistics(year);
+            return View(statistics);
         }
 
+        [Authorize(AppRole.Admin)]
         public async Task<ActionResult> Website()
         {
             try
@@ -40,6 +44,7 @@ namespace FahasaStoreAdminApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(AppRole.Admin)]
         public async Task<ActionResult> Website(WebsiteModel Website)
         {
             try
@@ -55,6 +60,7 @@ namespace FahasaStoreAdminApp.Controllers
             }
         }
 
+        [Authorize(AppRole.Admin, AppRole.Staff)]
         public IActionResult Account()
         {
             return View();

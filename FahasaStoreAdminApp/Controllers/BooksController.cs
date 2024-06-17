@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using BookStoreAPI.Services;
 using FahasaStoreAdminApp.Entities;
+using FahasaStoreAdminApp.Filters;
 using FahasaStoreAdminApp.Helpers;
+using FahasaStoreAdminApp.Models.DTO;
 using FahasaStoreAdminApp.Models.EModels;
 using FahasaStoreAdminApp.Services.EntityService;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FahasaStoreAdminApp.Controllers
 {
-    public class BooksController : GenericController<Book, BookModel, int>
+    public class BooksController : GenericController<Book, BookModel, BookDTO, int>
     {
         private readonly IBookService _bookService;
         private readonly ISubcategoryService _subcategoryService;
@@ -39,6 +41,7 @@ namespace FahasaStoreAdminApp.Controllers
         }
         #endregion
 
+        [Authorize(AppRole.Admin, AppRole.Staff)]
         public override async Task<ActionResult> Create()
         {
             ViewData["SubcategoryId"] = new SelectList(await _subcategoryService.GetAllAsync(), "Id", "Name");
@@ -55,6 +58,7 @@ namespace FahasaStoreAdminApp.Controllers
             return PartialView();
         }
 
+        [Authorize(AppRole.Admin, AppRole.Staff)]
         public override async Task<IActionResult> Edit(int id)
         {
             ViewData["SubcategoryId"] = new SelectList(await _subcategoryService.GetAllAsync(), "Id", "Name");
@@ -68,13 +72,34 @@ namespace FahasaStoreAdminApp.Controllers
                 DisplayText = $"{d.Length} x {d.Width} x {d.Height}"
             });
             ViewData["DimensionId"] = new SelectList(dimensionSelectList, "Id", "DisplayText");
-            var editEntity = await _bookService.GetByIdAsync(id);
-            return PartialView(_mapper.Map<BookModel>(editEntity));
+            var editEntity = await _bookService.GetItemUpdateByIdAsync(id);
+            return PartialView(editEntity);
         }
-        public async Task<ActionResult> GetPosterImages(int id)
+
+        [Authorize(AppRole.Admin, AppRole.Staff)]
+        public async Task<ActionResult> GetPosterImages(string id)
         {
             ViewData["BookID"] = id;
-            return PartialView(await _posterImageService.GetListByAsync("BookId", id.ToString()));
+            var listPoster = await _posterImageService.GetListByAsync("BookId", id);
+            return PartialView(listPoster.Items);
+        }
+
+        [Authorize(AppRole.Admin, AppRole.Staff)]
+        public override Task<IActionResult> Delete(int id)
+        {
+            return base.Delete(id);
+        }
+
+        [Authorize(AppRole.Admin, AppRole.Staff)]
+        public override Task<IActionResult> Details(int id)
+        {
+            return base.Details(id);
+        }
+
+        [Authorize(AppRole.Admin, AppRole.Staff)]
+        public override Task<IActionResult> Index(Dictionary<string, string>? filters, string? sortField, string? sortDirection, int page = 1, int size = 10)
+        {
+            return base.Index(filters, sortField, sortDirection, page, size);
         }
     }
 }

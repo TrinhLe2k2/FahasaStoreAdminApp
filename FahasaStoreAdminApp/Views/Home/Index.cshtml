@@ -1,9 +1,192 @@
-﻿@{
-    ViewData["Title"] = "Home";
+﻿@model IEnumerable<FahasaStoreAdminApp.Models.DTO.MonthlyStatisticsDTO>
+@{
+    ViewData["Title"] = "Doanh Thu";
     ViewData["ActiveSidebar"] = 0;
+
+    var months = Model.Select(st => st.Month).ToArray();
+    var revenues = Model.Select(st => st.TotalRevenue).ToArray();
+    var completedOrders = Model.Select(st => st.TotalOrdersCompleted).ToArray();
+    var canceledOrders = Model.Select(st => st.TotalOrdersCancelled).ToArray();
+    var newUsers = Model.Select(st => st.NewUsers).ToArray();
+    var totalBooksSold = Model.Select(st => st.TotalBooksSold).ToArray();
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 p-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Doanh thu (Tháng này)
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@revenues[DateTime.Now.Month - 1].ToString("#,##0 ₫")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Year) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 p-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Doanh thu (Năm)
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@revenues.Sum().ToString("#,##0 ₫")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Completed Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 p-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Đơn hàng hoàn thành
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@completedOrders[DateTime.Now.Month - 1]</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Canceled Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 p-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Đơn hàng hủy
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@canceledOrders[DateTime.Now.Month - 1]</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-times-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Biểu đồ doanh thu</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-bar h-100">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <hr>
+                    Thống kê doanh thu từng tháng trong năm.
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Biểu đồ số lượng sách đã bán</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-line h-100">
+                        <canvas id="booksSoldChart"></canvas>
+                    </div>
+                    <hr>
+                    Thống kê số sách đã bán từng tháng trong năm.
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Revenue Chart
+        var ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+        var revenueChart = new Chart(ctxRevenue, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(months)),
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: @Html.Raw(Json.Serialize(revenues)),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        callback: function (value, index, values) {
+                            return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                        }
+
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                            }
+
+                        }
+                    }
+                }
+            }
+        });
+
+        // Books Sold Chart
+        var ctxBooksSold = document.getElementById('booksSoldChart').getContext('2d');
+        var booksSoldChart = new Chart(ctxBooksSold, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(months)),
+                datasets: [{
+                    label: 'Số sách đã bán',
+                    data: @Html.Raw(Json.Serialize(totalBooksSold)),
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

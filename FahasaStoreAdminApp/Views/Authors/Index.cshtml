@@ -1,9 +1,9 @@
-﻿@model IEnumerable<FahasaStoreAdminApp.Entities.Author>
+﻿@model IEnumerable<FahasaStoreAdminApp.Models.DTO.AuthorDTO>
 
 @{
     ViewData["Title"] = "Quản lý tác giả";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ActiveSidebar"] = 4;
+    ViewData["ActiveSidebar"] = 7;
     ViewData["UrlCurrent"] = "/Authors/Index";
 }
 
@@ -42,3 +42,4 @@
         }
     </tbody>
 </table>
+<partial name="_Paginated" />

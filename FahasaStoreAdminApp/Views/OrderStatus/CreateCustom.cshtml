@@ -1,0 +1,69 @@
+﻿@model FahasaStoreAdminApp.Models.EModels.OrderStatusModel
+@{
+    var orderId = ViewData["orderId"] as int?;
+}
+<div>
+    <!-- Button trigger modal -->
+    <button type="button" id="btn-toggle" class="btn btn-primary" hidden data-bs-toggle="modal" data-bs-target="#appModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form asp-action="Create" method="post" id="form-UpdateStatusOrder">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="appModalLabel"> Cập nhật trạng thái đơn hàng </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group" hidden>
+                                    <label asp-for="OrderId" class="control-label"></label>
+                                    <input asp-for="OrderId" class="form-control" value="@orderId" />
+                                    <span asp-validation-for="OrderId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="StatusId" class="control-label"></label>
+                                    <select asp-for="StatusId" class="form-control" asp-items="ViewBag.Status"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" value="Thêm Role" class="btn btn-primary" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btn-toggle").click();
+    $("#form-UpdateStatusOrder").submit(function (event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000);
+            },
+            error: function (xhr, status, error) {
+                alert("Đã xảy ra lỗi: " + error);
+            }
+        });
+    });
+
+</script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+

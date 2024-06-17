@@ -1,9 +1,9 @@
-﻿@model IEnumerable<FahasaStoreAdminApp.Entities.PartnerType>
+﻿@model IEnumerable<FahasaStoreAdminApp.Models.DTO.PartnerTypeDTO>
 
 @{
     ViewData["Title"] = "Quản lý kiểu đối tác";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ActiveSidebar"] = 4;
+    ViewData["ActiveSidebar"] = 7;
     ViewData["UrlCurrent"] = "/PartnerTypes/Index";
 }
 <partial name="_ToastrMessage" />
@@ -40,3 +40,4 @@
         }
     </tbody>
 </table>
+<partial name="_Paginated" />

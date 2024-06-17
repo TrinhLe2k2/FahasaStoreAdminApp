@@ -1,9 +1,9 @@
-﻿@model IEnumerable<FahasaStoreAdminApp.Entities.FlashSale>
+﻿@model IEnumerable<FahasaStoreAdminApp.Models.DTO.FlashSaleDTO>
 
 @{
     ViewData["Title"] = "Quản lý Flash Sale";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ActiveSidebar"] = 4;
+    ViewData["ActiveSidebar"] = 6;
     ViewData["UrlCurrent"] = "/FlashSales/Index";
 }
 
@@ -35,10 +35,10 @@
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.StartDate)
+                    @item.StartDate.ToString("dd/MM/yyyy")
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EndDate)
+                    @item.EndDate.ToString("dd/MM/yyyy") 
                 </td>
                 <td>
                     <a href="/FlashSales/Edit" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
@@ -48,3 +48,4 @@
         }
     </tbody>
 </table>
+<partial name="_Paginated" />

@@ -1,4 +1,4 @@
-﻿@model FahasaStoreAdminApp.Models.EModels.FlashSaleBookModel
+﻿@model FahasaStoreAdminApp.Models.EModels.PaymentMethodModel
 
 <div>
     <!-- Button trigger modal -->
@@ -21,22 +21,9 @@
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label asp-for="FlashSaleId" class="control-label"></label>
-                                    <select asp-for="FlashSaleId" class="form-control" asp-items="ViewBag.FlashSales"></select>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="BookId" class="control-label"></label>
-                                    <select asp-for="BookId" class="form-control" asp-items="ViewBag.Books"></select>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="DiscountPercentage" class="control-label"></label>
-                                    <input asp-for="DiscountPercentage" class="form-control" />
-                                    <span asp-validation-for="DiscountPercentage" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="Quantity" class="control-label"></label>
-                                    <input asp-for="Quantity" class="form-control" />
-                                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                                    <label asp-for="Name" class="control-label"></label>
+                                    <input asp-for="Name" class="form-control" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -57,3 +44,4 @@
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
+s

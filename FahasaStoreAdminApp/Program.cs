@@ -14,6 +14,9 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true; // Cookie là cần thiết cho ứng dụng
 });
 
+// Cấu hình IHttpContextAccessor
+builder.Services.AddHttpContextAccessor();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
@@ -22,6 +25,12 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<IImageUploader, ImageUploader>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IJwtTokenDecoder, JwtTokenDecoder>();
+
+builder.Services.AddScoped<UserLogined>(provider =>
+{
+    var httpContextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
+    return new UserLogined(httpContextAccessor);
+});
 
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScopedServicesFromAssembly(Assembly.GetExecutingAssembly(), "FahasaStoreAdminApp.Services.EntityService");

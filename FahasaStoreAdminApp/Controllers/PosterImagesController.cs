@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookStoreAPI.Services;
 using FahasaStoreAdminApp.Entities;
+using FahasaStoreAdminApp.Filters;
 using FahasaStoreAdminApp.Helpers;
 using FahasaStoreAdminApp.Models.EModels;
 using FahasaStoreAdminApp.Services.EntityService;
@@ -21,6 +22,7 @@ namespace FahasaStoreAdminApp.Controllers
         }
 
         // POST: PosterImageController/Create
+        [Authorize(AppRole.Admin, AppRole.Staff)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(int id, IFormFile fileImage)
@@ -43,6 +45,7 @@ namespace FahasaStoreAdminApp.Controllers
         }
 
         // GET: PosterImageController/Delete/5
+        [Authorize(AppRole.Admin, AppRole.Staff)]
         public async Task<ActionResult> Delete(int id)
         {
             try
@@ -57,5 +60,7 @@ namespace FahasaStoreAdminApp.Controllers
                 return View();
             }
         }
+
+        
     }
 }

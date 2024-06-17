@@ -1,83 +1,71 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using BookStoreAPI.Services;
+using FahasaStoreAdminApp.Entities;
+using FahasaStoreAdminApp.Filters;
+using FahasaStoreAdminApp.Helpers;
+using FahasaStoreAdminApp.Models.DTO;
+using FahasaStoreAdminApp.Models.EModels;
+using FahasaStoreAdminApp.Services;
+using FahasaStoreAdminApp.Services.EntityService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FahasaStoreAdminApp.Controllers
 {
-    public class UsersController : Controller
+    public class UsersController : GenericController<AspNetUser, AspNetUserModel, AspNetUserDTO, string>
     {
-        // GET: UsersController
-        public ActionResult Index()
+        private readonly IUserService _userService;
+        private readonly IAccountService _accountService;
+        public UsersController(IUserService userService, IMapper mapper, IImageUploader imageUploader, IAccountService accountService) : base(userService, mapper, imageUploader)
         {
-            return View();
+            _userService = userService;
+            _accountService = accountService;
+        }
+        [Authorize(AppRole.Admin)]
+        public IActionResult RemoveRoleFromUser(string userId, string role, string? email)
+        {
+            ViewData["userId"] = userId;
+            ViewData["role"] = role;
+            ViewData["email"] = email;
+            return PartialView();
         }
 
-        // GET: UsersController/Details/5
-        public ActionResult Details(int id)
+        [Authorize(AppRole.Admin)]
+        public IActionResult AddRoleToUser(string userId, string? email)
         {
-            return View();
+            ViewData["userId"] = userId;
+            ViewData["email"] = email;
+            ViewData["roles"] = AppRole.Roles.ToList();
+
+            return PartialView();
+        }
+        [Authorize(AppRole.Admin)]
+        public override Task<ActionResult> Create()
+        {
+            return base.Create();
         }
 
-        // GET: UsersController/Create
-        public ActionResult Create()
+        [Authorize(AppRole.Admin)]
+        public override Task<IActionResult> Delete(string id)
         {
-            return View();
+            return base.Delete(id);
         }
 
-        // POST: UsersController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [Authorize(AppRole.Admin)]
+        public override Task<IActionResult> Details(string id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return base.Details(id);
         }
 
-        // GET: UsersController/Edit/5
-        public ActionResult Edit(int id)
+        [Authorize(AppRole.Admin)]
+        public override Task<IActionResult> Edit(string id)
         {
-            return View();
+            return base.Edit(id);
         }
 
-        // POST: UsersController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [Authorize(AppRole.Admin, AppRole.Staff)]
+        public override Task<IActionResult> Index(Dictionary<string, string>? filters, string? sortField, string? sortDirection, int page = 1, int size = 10)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UsersController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UsersController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return base.Index(filters, sortField, sortDirection, page, size);
         }
     }
 }
