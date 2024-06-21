@@ -114,12 +114,16 @@ namespace FahasaStoreAdminApp.Models.DTO
             PosterImages = new HashSet<PosterImageModel>();
             Reviews = new HashSet<ReviewModel>();
         }
-
+        [DisplayName("Mã Sách")]
         public int Id { get; set; }
+        [DisplayName("Tên Sách")]
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
+        [DisplayName("Giá Gốc")]
         public int Price { get; set; }
+        [DisplayName("Giảm Giá %")]
         public int DiscountPercentage { get; set; }
+        [DisplayName("Số Lượng")]
         public int Quantity { get; set; }
         public double? Weight { get; set; }
         public int? PageCount { get; set; }

@@ -1,6 +1,8 @@
-﻿using FahasaStoreAdminApp.Filters;
+﻿using FahasaStoreAdminApp.Entities;
+using FahasaStoreAdminApp.Filters;
 using FahasaStoreAdminApp.Helpers;
 using FahasaStoreAdminApp.Models.CustomModels;
+using FahasaStoreAdminApp.Models.EModels;
 using FahasaStoreAdminApp.Services;
 using FahasaStoreAdminApp.Services.EntityService;
 using Microsoft.AspNetCore.Mvc;
@@ -94,6 +96,22 @@ namespace FahasaStoreAdminApp.Controllers
             }
             TempData["ErrorMessage"] = "Cập nhật thất bại";
             return RedirectToAction("Index", "Users");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(AppRole.Admin)]
+        public async Task<IActionResult> UpdateUser(AspNetUserModel model, string currentPassword, string newPassword)
+        {
+            model.Id = _userLogined.CurrentUser?.Id ?? "";
+            var result = await _accountService.UpdateUserAsync(model.Id, model.FullName, model.Email, model.PhoneNumber, currentPassword, newPassword);
+            if (result)
+            {
+                TempData["SuccessMessage"] = "Cập nhật thành công";
+                return RedirectToAction("Account", "Home");
+            }
+            TempData["ErrorMessage"] = "Cập nhật thất bại";
+            return RedirectToAction("Account", "Home");
         }
     }
 }

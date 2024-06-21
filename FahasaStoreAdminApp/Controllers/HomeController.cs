@@ -4,6 +4,7 @@ using FahasaStoreAdminApp.Helpers;
 using FahasaStoreAdminApp.Models.CustomModels;
 using FahasaStoreAdminApp.Models.EModels;
 using FahasaStoreAdminApp.Services;
+using FahasaStoreAdminApp.Services.EntityService;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -13,13 +14,19 @@ namespace FahasaStoreAdminApp.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IHomeService _homeService;
+        private readonly IUserService _userService;
         private readonly IJwtTokenDecoder _jwtTokenDecoder;
+        private readonly UserLogined _userLogined;
+        private readonly IAccountService _accountService;
 
-        public HomeController(ILogger<HomeController> logger, IHomeService homeService, IJwtTokenDecoder jwtTokenDecoder)
+        public HomeController(ILogger<HomeController> logger, IHomeService homeService, IJwtTokenDecoder jwtTokenDecoder, IUserService userService, UserLogined userLogined, IAccountService accountService)
         {
             _logger = logger;
             _homeService = homeService;
             _jwtTokenDecoder = jwtTokenDecoder;
+            _userService = userService;
+            _userLogined = userLogined;
+            _accountService = accountService;
         }
 
         [Authorize(AppRole.Admin, AppRole.Staff )]
@@ -61,9 +68,10 @@ namespace FahasaStoreAdminApp.Controllers
         }
 
         [Authorize(AppRole.Admin, AppRole.Staff)]
-        public IActionResult Account()
+        public async Task<ActionResult> Account()
         {
-            return View();
+            var user = await _userService.GetByIdAsync(_userLogined.CurrentUser?.Id ?? "");
+            return View(user);
         }
     }
 }
