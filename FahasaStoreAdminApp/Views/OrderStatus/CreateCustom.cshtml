@@ -35,7 +35,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type="submit" value="Thêm Role" class="btn btn-primary" />
+                        <input type="submit" value="Cập Nhật Trạng Thái" class="btn btn-primary" />
                     </div>
                 </div>
             </form>
@@ -58,7 +58,9 @@
                 }, 1000);
             },
             error: function (xhr, status, error) {
-                alert("Đã xảy ra lỗi: " + error);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000);
             }
         });
     });

@@ -10,22 +10,30 @@
 
 <partial name="_ToastrMessage" />
 
-<form asp-action="Website">
+<form asp-action="Website" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
         <div class="col-md-4">
             <div class="d-flex flex-md-column align-items-center justify-content-around">
                 <div class="form-group">
-                    <label asp-for="LogoUrl" class="control-label text-center d-block"></label>
-                    <input asp-for="LogoUrl" class="form-control" hidden />
-                    <span asp-validation-for="LogoUrl" class="text-danger"></span>
-                    @(await Html.RenderComponentAsync<ImagePreviewComponent>(RenderMode.ServerPrerendered, new { idInputFile = "LogoUrl" }))
+                    <div class="d-flex flex-md-column align-items-center justify-content-around">
+                        <div class="form-group">
+                            <label asp-for="LogoUrl" class="control-label text-center d-block"></label>
+                            <input asp-for="LogoUrl" class="form-control" hidden />
+                            <input type="file" name="LogoUrlImg" class="form-control" id="LogoUrlImg" value="@Model.LogoUrl" hidden />
+                            @(await Html.RenderComponentAsync<ImagePreviewComponent>(RenderMode.ServerPrerendered, new { idInputFile = "LogoUrlImg" }))
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="IconUrl" class="control-label text-center d-block"></label>
-                    <input asp-for="IconUrl" class="form-control" hidden />
-                    <span asp-validation-for="IconUrl" class="text-danger"></span>
-                    @(await Html.RenderComponentAsync<ImagePreviewComponent>(RenderMode.ServerPrerendered, new { idInputFile = "IconUrl" }))
+                    <div class="d-flex flex-md-column align-items-center justify-content-around">
+                        <div class="form-group">
+                            <label asp-for="IconUrl" class="control-label text-center d-block"></label>
+                            <input asp-for="IconUrl" class="form-control" hidden />
+                            <input type="file" name="IconUrlImg" class="form-control" id="IconUrlImg" value="@Model.IconUrl" hidden />
+                            @(await Html.RenderComponentAsync<ImagePreviewComponent>(RenderMode.ServerPrerendered, new { idInputFile = "IconUrlImg" }))
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

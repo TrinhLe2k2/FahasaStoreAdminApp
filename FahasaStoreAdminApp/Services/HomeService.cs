@@ -10,8 +10,9 @@ namespace FahasaStoreAdminApp.Services
 {
     public interface IHomeService
     {
-        Task<int> UpdateWebsite(WebsiteModel Website);
+        Task<int> UpdateWebsite(Website Website);
         Task<Website> GetWebsiteByIdAsync();
+        Task<ICollection<WebsiteModel>> GetAllWebsiteAsync();
         Task<ICollection<MonthlyStatisticsDTO>> GetYearlyStatistics(int? year);
     }
     public class HomeService : IHomeService
@@ -48,7 +49,7 @@ namespace FahasaStoreAdminApp.Services
             }
         }
 
-        public async Task<int> UpdateWebsite(WebsiteModel Website)
+        public async Task<int> UpdateWebsite(Website Website)
         {
             try
             {
@@ -88,6 +89,30 @@ namespace FahasaStoreAdminApp.Services
             catch (HttpRequestException ex)
             {
                 throw new Exception($"Error occurred while fetching from API.", ex);
+            }
+            catch (JsonException ex)
+            {
+                throw new Exception("Error occurred while parsing JSON response.", ex);
+            }
+        }
+
+        public async Task<ICollection<WebsiteModel>> GetAllWebsiteAsync()
+        {
+            try
+            {
+                using (var httpClient = _httpClientFactory.CreateClient())
+                {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userLogined.JWToken);
+                    var response = await httpClient.GetAsync($"https://localhost:7069/api/Websites");
+                    response.EnsureSuccessStatusCode();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var Websites = JsonConvert.DeserializeObject<ICollection<WebsiteModel>>(content);
+                    return Websites ?? new List<WebsiteModel>();
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"Error occurred while fetching Website with ID  from API.", ex);
             }
             catch (JsonException ex)
             {

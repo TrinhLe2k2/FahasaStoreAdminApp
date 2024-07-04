@@ -2,6 +2,7 @@
 using BookStoreAPI.Services;
 using FahasaStoreAdminApp.Helpers;
 using FahasaStoreAdminApp.Services;
+using Microsoft.AspNetCore.Localization;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,7 @@ builder.Services.AddHttpContextAccessor();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddHttpClient();
 
 // Đăng ký các dịch vụ vào container.

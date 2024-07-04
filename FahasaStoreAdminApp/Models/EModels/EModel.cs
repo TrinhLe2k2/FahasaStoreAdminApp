@@ -7,6 +7,7 @@ namespace FahasaStoreAdminApp.Models.EModels
     {
         public int Id { get; set; }
         public string UserId { get; set; } = null!;
+        [DisplayName("Người Nhận")]
         public string ReceiverName { get; set; } = null!;
         public string Phone { get; set; } = null!;
         public string Province { get; set; } = null!;
@@ -67,17 +68,27 @@ namespace FahasaStoreAdminApp.Models.EModels
     public class BookModel
     {
         public int Id { get; set; }
+        [Display(Name = "Thể Loại")]
         public int SubcategoryId { get; set; }
+        [Display(Name = "Tác Giả")]
         public int AuthorId { get; set; }
+        [Display(Name = "Loại Bìa")]
         public int CoverTypeId { get; set; }
+        [Display(Name = "Kích Thước")]
         public int DimensionId { get; set; }
         [Display(Name = "Tên Sách")]
         public string Name { get; set; } = null!;
+        [Display(Name = "Mô Tả")]
         public string Description { get; set; } = null!;
-        public decimal Price { get; set; }
+        [Display(Name = "Giá Gốc")]
+        public int Price { get; set; }
+        [Display(Name = "Giảm Giá %")]
         public int DiscountPercentage { get; set; }
+        [Display(Name = "Số Lượng")]
         public int Quantity { get; set; }
+        [Display(Name = "Khối Lượng (g)")]
         public double? Weight { get; set; }
+        [Display(Name = "Số Trang")]
         public int? PageCount { get; set; }
         public DateTime? CreatedAt { get; set; }
     }
@@ -162,6 +173,7 @@ namespace FahasaStoreAdminApp.Models.EModels
     public class MenuModel
     {
         public int Id { get; set; }
+        [Required()]
         public string Name { get; set; } = null!;
         public string Link { get; set; } = null!;
         public string? PublicId { get; set; }
@@ -212,6 +224,7 @@ namespace FahasaStoreAdminApp.Models.EModels
     {
         public int Id { get; set; }
         public int OrderId { get; set; }
+        [Display(Name = "Trạng Thái")]
         public int StatusId { get; set; }
         public DateTime? CreatedAt { get; set; }
     }

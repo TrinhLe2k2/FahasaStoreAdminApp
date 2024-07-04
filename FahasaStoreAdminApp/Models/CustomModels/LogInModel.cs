@@ -19,6 +19,7 @@ namespace FahasaStoreAdminApp.Models.CustomModels
         public string Email { get; set; }
         [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
         [DataType(DataType.Password)]
+        [Display(Name = "Mật khẩu")]
         public string Password { get; set; }
     }
 }

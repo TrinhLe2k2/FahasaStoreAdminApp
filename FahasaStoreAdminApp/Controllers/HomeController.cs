@@ -1,4 +1,5 @@
-﻿using FahasaStoreAdminApp.Entities;
+﻿using BookStoreAPI.Services;
+using FahasaStoreAdminApp.Entities;
 using FahasaStoreAdminApp.Filters;
 using FahasaStoreAdminApp.Helpers;
 using FahasaStoreAdminApp.Models.CustomModels;
@@ -6,6 +7,7 @@ using FahasaStoreAdminApp.Models.EModels;
 using FahasaStoreAdminApp.Services;
 using FahasaStoreAdminApp.Services.EntityService;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Diagnostics;
 
 namespace FahasaStoreAdminApp.Controllers
@@ -18,8 +20,9 @@ namespace FahasaStoreAdminApp.Controllers
         private readonly IJwtTokenDecoder _jwtTokenDecoder;
         private readonly UserLogined _userLogined;
         private readonly IAccountService _accountService;
+        private readonly IImageUploader _imageUploader;
 
-        public HomeController(ILogger<HomeController> logger, IHomeService homeService, IJwtTokenDecoder jwtTokenDecoder, IUserService userService, UserLogined userLogined, IAccountService accountService)
+        public HomeController(ILogger<HomeController> logger, IHomeService homeService, IJwtTokenDecoder jwtTokenDecoder, IUserService userService, UserLogined userLogined, IAccountService accountService, IImageUploader imageUploader)
         {
             _logger = logger;
             _homeService = homeService;
@@ -27,6 +30,7 @@ namespace FahasaStoreAdminApp.Controllers
             _userService = userService;
             _userLogined = userLogined;
             _accountService = accountService;
+            _imageUploader = imageUploader;
         }
 
         [Authorize(AppRole.Admin, AppRole.Staff )]
@@ -41,7 +45,8 @@ namespace FahasaStoreAdminApp.Controllers
         {
             try
             {
-                return View(await _homeService.GetWebsiteByIdAsync());
+                var webEdit = await _homeService.GetWebsiteByIdAsync();
+                return View(webEdit);
             }
             catch
             {
@@ -52,17 +57,38 @@ namespace FahasaStoreAdminApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(AppRole.Admin)]
-        public async Task<ActionResult> Website(WebsiteModel Website)
+        public async Task<ActionResult> Website(Website model, IFormFile? LogoUrlImg, IFormFile? IconUrlImg)
         {
             try
             {
-                Website.Id = 1;
-                var res = await _homeService.UpdateWebsite(Website);
+                var webEdit = await _homeService.GetWebsiteByIdAsync();
+                webEdit.Name = model.Name;
+                webEdit.Description = model.Description;
+                webEdit.Address = model.Address;
+                webEdit.Phone = model.Phone;
+                webEdit.Email = model.Email;
+
+                if (LogoUrlImg != null && LogoUrlImg.Length > 0)
+                {
+                    var isDeleteImg = await _imageUploader.RemoveImageAsync(webEdit.LogoUrl);
+                    var resImgUploader = await _imageUploader.UploadImageAsync(LogoUrlImg, "LogoImg");
+                    webEdit.LogoUrl = resImgUploader.Url;
+                }
+
+                if (IconUrlImg != null && IconUrlImg.Length > 0)
+                {
+                    var isDeleteImg = await _imageUploader.RemoveImageAsync(webEdit.LogoUrl);
+                    var resImgUploader = await _imageUploader.UploadImageAsync(IconUrlImg, "IconImg");
+                    webEdit.IconUrl = resImgUploader.Url;
+                }
+
+                var res = await _homeService.UpdateWebsite(webEdit);
                 TempData["SuccessMessage"] = "Chỉnh sửa thành công";
-                return View();
+                return RedirectToAction("Website");
             }
             catch
             {
+                TempData["ErrorMessage"] = "Đã có lỗi xảy ra trong khi cập nhật dữ liệu";
                 return View();
             }
         }

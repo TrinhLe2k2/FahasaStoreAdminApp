@@ -1,6 +1,7 @@
 ﻿using FahasaStoreAdminApp.Entities;
 using FahasaStoreAdminApp.Models.EModels;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace FahasaStoreAdminApp.Models.DTO
 {
@@ -49,21 +50,24 @@ namespace FahasaStoreAdminApp.Models.DTO
             Reviews = new HashSet<ReviewModel>();
             Roles = new HashSet<AspNetRoleModel>();
         }
-
+        [DisplayName("Mã Người Dùng")]
         public string Id { get; set; } = null!;
-        [DisplayName("Họ và tên")]
+        [DisplayName("Họ Và Tên")]
         public string FullName { get; set; } = null!;
         public string? PublicId { get; set; }
+        [DisplayName("Ảnh Đại Diện")]
         public string ImageUrl { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public string? UserName { get; set; }
         public string? NormalizedUserName { get; set; }
+        [DisplayName("Địa Chỉ Email")]
         public string? Email { get; set; }
         public string? NormalizedEmail { get; set; }
         public bool EmailConfirmed { get; set; }
         public string? PasswordHash { get; set; }
         public string? SecurityStamp { get; set; }
         public string? ConcurrencyStamp { get; set; }
+        [DisplayName("Số Điện Thoại")]
         public string? PhoneNumber { get; set; }
         public bool PhoneNumberConfirmed { get; set; }
         public bool TwoFactorEnabled { get; set; }
@@ -77,7 +81,7 @@ namespace FahasaStoreAdminApp.Models.DTO
         public virtual ICollection<NotificationModel> Notifications { get; set; }
         public virtual ICollection<OrderModel> Orders { get; set; }
         public virtual ICollection<ReviewModel> Reviews { get; set; }
-
+        [DisplayName("Vai Trò")]
         public virtual ICollection<AspNetRoleModel> Roles { get; set; }
     }
     public partial class AuthorDTO
@@ -86,8 +90,9 @@ namespace FahasaStoreAdminApp.Models.DTO
         {
             Books = new HashSet<BookModel>();
         }
-
+        [DisplayName("#")]
         public int Id { get; set; }
+        [DisplayName("Tên Tác Giả")]
         public string Name { get; set; } = null!;
         public DateTime? CreatedAt { get; set; }
 
@@ -95,11 +100,15 @@ namespace FahasaStoreAdminApp.Models.DTO
     }
     public partial class BannerDTO
     {
+        [DisplayName("#")]
         public int Id { get; set; }
         public string? PublicId { get; set; }
+        [DisplayName("Hình Ảnh")]
         public string? ImageUrl { get; set; }
+        [DisplayName("Tiêu Đề")]
         public string Title { get; set; } = null!;
         public string Content { get; set; } = null!;
+        [DisplayName("Thời Gian")]
         public DateTime? CreatedAt { get; set; }
     }
     public partial class BookDTO
@@ -119,26 +128,34 @@ namespace FahasaStoreAdminApp.Models.DTO
         [DisplayName("Tên Sách")]
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
-        [DisplayName("Giá Gốc")]
+        [DisplayName("Giá Gốc (đ)")]
         public int Price { get; set; }
         [DisplayName("Giảm Giá %")]
         public int DiscountPercentage { get; set; }
         [DisplayName("Số Lượng")]
         public int Quantity { get; set; }
+        [DisplayName("Khối lượng (g)")]
         public double? Weight { get; set; }
+        [DisplayName("Số Trang")]
         public int? PageCount { get; set; }
         public DateTime? CreatedAt { get; set; }
-	public int? QuantitySold { get; set; }
+	    public int? QuantitySold { get; set; }
 
+        [DisplayName("Tác Giả")]
         public virtual AuthorModel Author { get; set; } = null!;
+        [DisplayName("Loại Bìa")]
         public virtual CoverTypeModel CoverType { get; set; } = null!;
+        [DisplayName("Kích Thước")]
         public virtual DimensionModel Dimension { get; set; } = null!;
+        [DisplayName("Thể Loại")]
         public virtual SubcategoryModel Subcategory { get; set; } = null!;
+        [DisplayName("Đối Tác")]
         public virtual ICollection<BookPartnerDTO> BookPartners { get; set; }
         public virtual ICollection<CartItemModel> CartItems { get; set; }
         public virtual ICollection<FavouriteModel> Favourites { get; set; }
         public virtual ICollection<FlashSaleBookModel> FlashSaleBooks { get; set; }
         public virtual ICollection<OrderItemModel> OrderItems { get; set; }
+        [DisplayName("Hình Ảnh")]
         public virtual ICollection<PosterImageModel> PosterImages { get; set; }
         public virtual ICollection<ReviewModel> Reviews { get; set; }
     }
@@ -181,10 +198,12 @@ namespace FahasaStoreAdminApp.Models.DTO
         {
             Subcategories = new HashSet<SubcategoryModel>();
         }
-
+        [DisplayName("#")]
         public int Id { get; set; }
+        [DisplayName("Tên Thể Loại")]
         public string Name { get; set; } = null!;
         public string? PublicId { get; set; }
+        [DisplayName("Icon")]
         public string? ImageUrl { get; set; }
         public DateTime? CreatedAt { get; set; }
 
@@ -197,7 +216,9 @@ namespace FahasaStoreAdminApp.Models.DTO
             Books = new HashSet<BookModel>();
         }
 
+        [DisplayName("#")]
         public int Id { get; set; }
+        [DisplayName("Loại Bìa")]
         public string TypeName { get; set; } = null!;
         public DateTime? CreatedAt { get; set; }
 
@@ -209,11 +230,15 @@ namespace FahasaStoreAdminApp.Models.DTO
         {
             Books = new HashSet<BookModel>();
         }
-
+        [DisplayName("#")]
         public int Id { get; set; }
+        [DisplayName("Chiều Dài")]
         public int Length { get; set; }
+        [DisplayName("Chiều Rộng")]
         public int Width { get; set; }
+        [DisplayName("Chiều Cao")]
         public int Height { get; set; }
+        [DisplayName("Đơn Vị")]
         public string Unit { get; set; } = null!;
         public DateTime? CreatedAt { get; set; }
 
@@ -233,9 +258,11 @@ namespace FahasaStoreAdminApp.Models.DTO
         {
             FlashSaleBooks = new HashSet<FlashSaleBookModel>();
         }
-
+        [DisplayName("#")]
         public int Id { get; set; }
+        [DisplayName("Thời Gian Bắt Đầu")]
         public DateTime StartDate { get; set; }
+        [DisplayName("Thời Gian Kết Thúc")]
         public DateTime EndDate { get; set; }
         public DateTime? CreatedAt { get; set; }
 
@@ -243,22 +270,30 @@ namespace FahasaStoreAdminApp.Models.DTO
     }
     public partial class FlashSaleBookDTO
     {
+        [DisplayName("#")]
         public int Id { get; set; }
+        [DisplayName("% Giảm")]
         public int DiscountPercentage { get; set; }
+        [DisplayName("Số Lượng Bán")]
         public int Quantity { get; set; }
         public int Sold { get; set; }
         public string? Poster { get; set; }
         public DateTime? CreatedAt { get; set; }
 
+        [DisplayName("Sách")]
         public virtual BookModel Book { get; set; } = null!;
         public virtual FlashSaleModel FlashSale { get; set; } = null!;
     }
     public partial class MenuDTO
     {
+        [DisplayName("#")]
         public int Id { get; set; }
+        [DisplayName("Tên Menu")]
         public string Name { get; set; } = null!;
+        [DisplayName("Liên Kết")]
         public string Link { get; set; } = null!;
         public string? PublicId { get; set; }
+        [DisplayName("Hình Ảnh")]
         public string? ImageUrl { get; set; }
         public DateTime? CreatedAt { get; set; }
     }
@@ -295,8 +330,10 @@ namespace FahasaStoreAdminApp.Models.DTO
             Reviews = new HashSet<ReviewDTO>();
         }
 
+        [DisplayName("#")]
         public int Id { get; set; }
         public string? Note { get; set; }
+        [DisplayName("Thời Gian Đặt Hàng")]
         public DateTime? CreatedAt { get; set; }
 
         public virtual AddressModel Address { get; set; } = null!;
@@ -305,6 +342,7 @@ namespace FahasaStoreAdminApp.Models.DTO
         public virtual VoucherModel? Voucher { get; set; }
         public virtual PaymentModel? Payment { get; set; }
         public virtual ICollection<OrderItemDTO> OrderItems { get; set; }
+        [DisplayName("Trạng Thái Đơn Hàng")]
         public virtual ICollection<OrderStatusDTO> OrderStatuses { get; set; }
         public virtual ICollection<ReviewDTO> Reviews { get; set; }
     }
@@ -332,15 +370,20 @@ namespace FahasaStoreAdminApp.Models.DTO
             BookPartners = new HashSet<BookPartnerModel>();
         }
 
+        [DisplayName("#")]
         public int Id { get; set; }
+        [DisplayName("Đối Tác")]
         public string Name { get; set; } = null!;
+        [DisplayName("Địa Chỉ")]
         public string Address { get; set; } = null!;
         public string Phone { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string? PublicId { get; set; }
+        [DisplayName("Logo")]
         public string? ImageUrl { get; set; }
         public DateTime? CreatedAt { get; set; }
 
+        [DisplayName("Kiểu Đối Tác")]
         public virtual PartnerTypeModel PartnerType { get; set; } = null!;
         public virtual ICollection<BookPartnerModel> BookPartners { get; set; }
     }
@@ -371,7 +414,9 @@ namespace FahasaStoreAdminApp.Models.DTO
             Orders = new HashSet<OrderModel>();
         }
 
+        [DisplayName("#")]
         public int Id { get; set; }
+        [DisplayName("Phương Thức Thanh Toán")]
         public string Name { get; set; } = null!;
         public string? PublicId { get; set; }
         public string? ImageUrl { get; set; }
@@ -382,10 +427,14 @@ namespace FahasaStoreAdminApp.Models.DTO
     }
     public partial class PlatformDTO
     {
+        [DisplayName("#")]
         public int Id { get; set; }
+        [DisplayName("Nền Tảng")]
         public string PlatformName { get; set; } = null!;
         public string? PublicId { get; set; }
+        [DisplayName("Logo")]
         public string? ImageUrl { get; set; }
+        [DisplayName("Liên Kết")]
         public string Link { get; set; } = null!;
         public DateTime? CreatedAt { get; set; }
     }
@@ -421,7 +470,9 @@ namespace FahasaStoreAdminApp.Models.DTO
             OrderStatuses = new HashSet<OrderStatusModel>();
         }
 
+        [DisplayName("#")]
         public int Id { get; set; }
+        [DisplayName("Trạng Thái")]
         public string Name { get; set; } = null!;
         public DateTime? CreatedAt { get; set; }
 
@@ -434,12 +485,16 @@ namespace FahasaStoreAdminApp.Models.DTO
             Books = new HashSet<BookModel>();
         }
 
+        [DisplayName("#")]
         public int Id { get; set; }
+        [DisplayName("Thể Loại con")]
         public string Name { get; set; } = null!;
         public string? PublicId { get; set; }
+        [DisplayName("Icon")]
         public string? ImageUrl { get; set; }
         public DateTime? CreatedAt { get; set; }
 
+        [DisplayName("Thể Loại")]
         public virtual CategoryModel Category { get; set; } = null!;
         public virtual ICollection<BookModel> Books { get; set; }
     }
@@ -471,16 +526,25 @@ namespace FahasaStoreAdminApp.Models.DTO
         {
             Orders = new HashSet<OrderModel>();
         }
-
+        [DisplayName("#")]
         public int Id { get; set; }
+        [DisplayName("Tiêu Đề")]
         public string Name { get; set; } = null!;
+        [DisplayName("Mã")]
         public string Code { get; set; } = null!;
+        [DisplayName("Mô Tả")]
         public string? Description { get; set; }
+        [DisplayName("% Giảm Giá")]
         public int DiscountPercent { get; set; }
+        [DisplayName("Thời Gian bắt đầu")]
         public DateTime StartDate { get; set; }
+        [DisplayName("Thời Gian Hết Hạn")]
         public DateTime EndDate { get; set; }
+        [DisplayName("Đơn Hàng Tối Thiểu")]
         public int MinOrderAmount { get; set; }
+        [DisplayName("Giảm Tối Đa")]
         public int MaxDiscountAmount { get; set; }
+        [DisplayName("Số Lượng")]
         public int UsageLimit { get; set; }
         public DateTime? CreatedAt { get; set; }
 
@@ -489,12 +553,19 @@ namespace FahasaStoreAdminApp.Models.DTO
     public partial class WebsiteDTO
     {
         public int Id { get; set; }
+        [Display(Name = "Tên Website")]
         public string Name { get; set; } = null!;
+        [Display(Name = "Logo")]
         public string LogoUrl { get; set; } = null!;
+        [Display(Name = "Icon")]
         public string IconUrl { get; set; } = null!;
+        [Display(Name = "Giới Thiệu")]
         public string Description { get; set; } = null!;
+        [Display(Name = "Địa Chỉ")]
         public string Address { get; set; } = null!;
+        [Display(Name = "Số Điện Thoại")]
         public string Phone { get; set; } = null!;
+        [Display(Name = "Địa Chỉ Email")]
         public string Email { get; set; } = null!;
         public DateTime? CreatedAt { get; set; }
     }
